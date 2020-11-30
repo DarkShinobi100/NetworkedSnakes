@@ -16,7 +16,7 @@ std::string Stringify( float value ) {
 }
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(640, 480), "Snake Networked");
+	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
 	//Create two Snakes (Can also accept "black" and "red")
@@ -33,7 +33,7 @@ int main() {
 	floorTexture.loadFromFile("Assets/tileSand1.png");
 	floorTexture.setRepeated(true);
 	floor.setTexture(floorTexture);
-	floor.setTextureRect(sf::IntRect(0, 0, 640, 480));
+	floor.setTextureRect(sf::IntRect(0, 0, 720, 640));
 
 	//Initialise font and text
 	sf::Font montserrat;
@@ -77,15 +77,14 @@ int main() {
 
 				if (event.key.code == sf::Keyboard::Key::A) {
 
-					Snakes[0].setRotation(Snakes[0].GetRotation() + 1.0);
-					//Snakes[0].setPosition(Snakes[0].GetPosition().x -1.0, Snakes[0].GetPosition().y);
+					Snakes[0].setRotation(Snakes[0].GetRotation() - 1.0);
 				}
 				if (event.key.code == sf::Keyboard::Key::D) {
 
-					Snakes[0].setRotation(Snakes[0].GetRotation() - 1.0);
-					//Snakes[0].setPosition(Snakes[0].GetPosition().x + 1.0, Snakes[0].GetPosition().y);
+					Snakes[0].setRotation(Snakes[0].GetRotation() + 1.0);
 				}
 			}
+			//Move player 1 forward at all times
 			Snakes[0].Move();
 		}
 

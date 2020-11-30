@@ -2,8 +2,8 @@
 
 Snake::Snake(std::string color) : sf::Sprite()
 {
-	m_BodyTexture.loadFromFile("Assets/" + color + "Tank.png");
-	m_BarrelTexture.loadFromFile("Assets/" + color + "Barrel.png");
+	//Snake image from: https://commons.wikimedia.org/wiki/File:Snake_-_Top_-_Animated_Green_and_Blue_-_friendly_cartoon.png
+	m_BodyTexture.loadFromFile("Assets/" + color + "Snake.png");
 	setTexture(m_BodyTexture);
 
 	setOrigin(getTextureRect().width / 2, getTextureRect().height / 2);
@@ -58,8 +58,8 @@ void Snake::Move()
 	float angleRADS = (3.1415926536 / 180) * (GetRotation());
 
 	//Set x and y
-	float xValue = 0.5f * cos(angleRADS);
-	float yValue = 0.5f * sin(angleRADS);
+	float xValue = 0.25f * cos(angleRADS);
+	float yValue = 0.25f * sin(angleRADS);
 
 	setPosition(GetPosition().x + xValue,GetPosition().y + yValue);
 }
