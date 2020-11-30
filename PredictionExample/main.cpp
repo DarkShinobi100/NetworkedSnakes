@@ -41,6 +41,10 @@ int main() {
 	int player1Score = 0;
 	int player2Score = 0;
 
+	int RNG = rand() % 30;
+	apple[RNG].SetActive(true);
+
+
 	//Create two Snakes (Can also accept "black" and "red")
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
@@ -140,6 +144,8 @@ int main() {
 						//Collition detected with player 1
 						player1Score++;
 						apple[i].SetActive(false);
+						RNG = rand() % 30;
+						apple[RNG].SetActive(true);
 					}
 					else 
 					if (Snakes[1].getPosition().x < apple[i].getPosition().x + shape2.width &&
@@ -150,11 +156,11 @@ int main() {
 					//Collition detected with player 2
 					player2Score++;
 					apple[i].SetActive(false);
+					RNG = rand() % 30;
+					apple[RNG].SetActive(true);
 					}
 				}
 			}
-
-
 		}
 
 		//If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already
