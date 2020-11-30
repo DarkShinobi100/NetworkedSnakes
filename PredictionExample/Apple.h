@@ -21,6 +21,7 @@ public:
 	bool GetActive() { return m_Active; }
 	void SetRenderMode(const RenderMode renderMode) { m_RenderMode = renderMode; }
 	void setPosition(float x, float y);
+	sf::Vector2f GetPosition();
 	void Reset();
 
 private:

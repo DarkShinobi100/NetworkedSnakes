@@ -23,6 +23,10 @@ void Apple::setPosition(float x, float y) {
 	sf::Sprite::setPosition(x, y);
 }
 
+sf::Vector2f Apple::GetPosition() {
+	sf::Vector2f Position = sf::Sprite::getPosition();
+	return Position;
+}
 
 //Draw the Apple / or the ghost / or both
 const void Apple::Render(sf::RenderWindow* window) 

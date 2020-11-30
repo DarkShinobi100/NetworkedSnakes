@@ -19,16 +19,16 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
-	Apple apple[30];
+	Apple apple[30]; //set up apples
 	for (int i = 0; i < 30; i++)
 	{
 		if (i < 10) 
 		{
-			apple[i].setPosition(10 * i, 10);
+			apple[i].setPosition(50 * i, 10);
 		}
 		if (i >= 10 && i < 20)
 		{
-			apple[i].setPosition(10 * i, 10 * i);
+			apple[i].setPosition(50 * i, 10 * i);
 		}
 		if (i >= 20 && i < 30)
 		{
@@ -36,8 +36,11 @@ int main() {
 		}
 
 		apple[i].SetRenderMode(Apple::RenderMode::REAL_ONLY);
+		apple[i].SetActive(true);
 	}
 
+	int player1Score = 0;
+	int player2Score = 0;
 
 	//Create two Snakes (Can also accept "black" and "red")
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
@@ -62,6 +65,20 @@ int main() {
 	debugText.setFont(montserrat);
 	debugText.setOutlineColor(sf::Color::Black);
 	debugText.setOutlineThickness(1.f);
+
+	sf::Text ScoreP1Text;
+	montserrat.loadFromFile("Assets/Montserrat-Regular.ttf");
+	ScoreP1Text.setFont(montserrat);
+	ScoreP1Text.setOutlineColor(sf::Color::Black);
+	ScoreP1Text.setOutlineThickness(1.f);
+	ScoreP1Text.setPosition(25, 25);
+
+	sf::Text ScoreP2Text;
+	montserrat.loadFromFile("Assets/Montserrat-Regular.ttf");
+	ScoreP2Text.setFont(montserrat);
+	ScoreP2Text.setOutlineColor(sf::Color::Black);
+	ScoreP2Text.setOutlineThickness(1.f);
+	ScoreP2Text.setPosition(450, 25);
 
 	//Clock for timing the 'dt' value
 	sf::Clock clock;
@@ -106,7 +123,16 @@ int main() {
 			}
 			//Move player 1 forward at all times
 			Snakes[0].Move();
-			
+			for (int i = 0; i < 30; i++)
+			{
+				if (apple[i].GetActive())
+				{
+					//TODO collision Detection
+
+				}
+			}
+
+
 		}
 
 		//If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already
@@ -144,6 +170,11 @@ int main() {
 
 		}
 		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
+		
+		ScoreP1Text.setString("Player 1 score: " + Stringify(player1Score));
+
+		ScoreP2Text.setString("Player 2 score: " + Stringify(player2Score));
+
 
 		//Render the scene
 		window.clear();
@@ -162,6 +193,8 @@ int main() {
 		}
 
 		window.draw(debugText);
+		window.draw(ScoreP1Text);
+		window.draw(ScoreP2Text);
 		window.display();		
 	}
 
