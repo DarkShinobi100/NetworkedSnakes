@@ -32,6 +32,7 @@ void Tank::Update(float dt)
 		return;
 	TankMessage latestMessage = m_Messages.back();
 	setPosition( latestMessage.x, latestMessage.y );
+	setRotation(latestMessage.Rotataion);
 }
 
 void Tank::setPosition( float x, float y ) {
@@ -39,9 +40,17 @@ void Tank::setPosition( float x, float y ) {
 	m_BarrelSprite.setPosition(getPosition());
 }
 
+void Tank::setRotation(float Rotation) {
+	sf::Sprite::setRotation(Rotation);
+}
+
 //Use this to set the prediction position
 void Tank::setGhostPosition( sf::Vector2f pos ) {
 	m_GhostSprite.setPosition( pos );
+}
+
+void Tank::setGhostRotation(float Rotation) {
+	m_GhostSprite.setRotation(Rotation);
 }
 
 //Draw the tank / or the ghost / or both

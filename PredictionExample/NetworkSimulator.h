@@ -33,6 +33,7 @@ private:
 	float m_SentX, m_SentY; //The last sent position
 	float m_SentVX;
 	float m_SentVY;
+	float m_SentRotation;
 	float m_Latency = 0.1f;	
 	float m_SendRate = 0.5f;
 };

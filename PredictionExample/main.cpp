@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iomanip>
 #include "Tank.h"
-#include "NetworkSimulator.h"
+#include "Networking.h"
 #include "TankMessage.h"
 
 //Rounds a float to two decimal places and turns it into a string
@@ -15,11 +15,11 @@ std::string Stringify( float value ) {
 }
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(640, 480), "CMP303 - Prediction");
+	sf::RenderWindow window(sf::VideoMode(640, 480), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
 	//Create two tanks (Can also accept "black" and "red")
-	Tank tanks[2]{ Tank("green"), Tank("blue") };
+	Tank tanks[2]{ Tank("black"), Tank("red") };
 
 	tanks[0].setPosition(64, 256);
 
@@ -53,7 +53,7 @@ int main() {
 	float nextPrint = startTime;
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
-	NetworkSimulator netSimulator(sendRate, latency);
+	Networking netSimulator(sendRate, latency);
 	netSimulator.m_MyID = 0;	//On the network, we are Tank 0
 	
 	while (window.isOpen()) {

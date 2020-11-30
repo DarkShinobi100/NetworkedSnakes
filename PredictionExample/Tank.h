@@ -22,7 +22,9 @@ public:
 
 	void SetRenderMode(const RenderMode renderMode) { m_RenderMode = renderMode; }
 	void setPosition( float x, float y );
+	void setRotation(float Rotation);
 	void setGhostPosition( sf::Vector2f pos );
+	void setGhostRotation(float Rotation);
 	void Reset();
 
 private:

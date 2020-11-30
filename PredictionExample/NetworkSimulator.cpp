@@ -10,6 +10,7 @@ NetworkSimulator::NetworkSimulator(float sendRate, float latency) :
 	m_SentY(128),
 	m_SentVX(15),
 	m_SentVY(10),
+	m_SentRotation(10),
 	m_SendRate(sendRate),
 	m_Latency(latency)
 {
@@ -41,7 +42,7 @@ void NetworkSimulator::Update(float dt)
 	// Simulate messages being sent from a remote host every "period",
 	// delivered to this host after "latency".
 	while (m_SentTime + m_Latency < m_Time) {
-		m_MessageQueue.push({ 1, m_SentX, m_SentY, m_SentTime });
+		m_MessageQueue.push({ 1, m_SentX, m_SentY,m_SentRotation, m_SentTime });
 
 		m_SentTime += m_SendRate;
 
@@ -53,6 +54,7 @@ void NetworkSimulator::Update(float dt)
 
 		m_SentX += (m_SentVX * m_SendRate);
 		m_SentY += (m_SentVY * m_SendRate);
+		m_SentRotation += (m_SentVX * m_SendRate);
 	}
 
 }
@@ -74,4 +76,5 @@ void NetworkSimulator::Reset() {
 	m_SentY = 60.0f;
 	m_SentVX= 30;
 	m_SentVY= 20;
+	m_SentRotation = 10;
 }
