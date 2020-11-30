@@ -26,7 +26,7 @@ Networking::~Networking()
 
 
 
-bool Networking::ReceiveMessage(TankMessage& result)
+bool Networking::ReceiveMessage(SnakeMessage& result)
 {
 	if (m_MessageQueue.empty()) {
 		return false;

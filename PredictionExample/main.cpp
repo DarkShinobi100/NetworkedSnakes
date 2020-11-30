@@ -1,9 +1,10 @@
 #include <SFML\Graphics.hpp>
 #include <sstream>
 #include <iomanip>
-#include "Tank.h"
+#include "Snake.h"
 #include "Networking.h"
 #include "TankMessage.h"
+#include "SnakeMessage.h"
 
 //Rounds a float to two decimal places and turns it into a string
 std::string Stringify( float value ) {
@@ -18,13 +19,13 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(640, 480), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
-	//Create two tanks (Can also accept "black" and "red")
-	Tank tanks[2]{ Tank("black"), Tank("red") };
+	//Create two Snakes (Can also accept "black" and "red")
+	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
-	tanks[0].setPosition(64, 256);
+	Snakes[0].setPosition(64, 256);
 
-	tanks[1].setPosition(416, 128);
-	tanks[1].SetRenderMode(Tank::RenderMode::REAL_AND_PREDICTED);
+	Snakes[1].setPosition(416, 128);
+	Snakes[1].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
 
 	//Initialise the background texture and sprite
 	sf::Texture floorTexture;
@@ -54,7 +55,7 @@ int main() {
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
-	netSimulator.m_MyID = 0;	//On the network, we are Tank 0
+	netSimulator.m_MyID = 0;	//On the network, we are Snake 0
 	
 	while (window.isOpen()) {
 		//Get the time since the last frame in milliseconds
@@ -68,10 +69,14 @@ int main() {
 				if (event.key.code == sf::Keyboard::Key::Escape)
 					window.close();
 				if( event.key.code == sf::Keyboard::Key::R ) {
-					tanks[0].Reset(); tanks[1].Reset();
+					Snakes[0].Reset(); Snakes[1].Reset();
 					netSimulator.Reset();
 					nextPrint = startTime;
 					printf( "\n\n--------RESET--------\n\n" );
+				}
+
+				if (event.key.code == sf::Keyboard::Key::A) {
+					Snakes[0].setPosition(1.0f,1.0f); 
 				}
 			}
 		}
@@ -83,26 +88,26 @@ int main() {
 		}
 
 		if (netSimulator.Time() < 18.0f) {
-			TankMessage msg;
+			SnakeMessage msg;
 
 			//Update the network simulation
 			netSimulator.Update(dt);
 			//Get any 'network' messages that are available
 			while (netSimulator.ReceiveMessage(msg)) {
 				printf("Received message: ID= %d, Pos = (%.2f, %.2f), Time =%.2f\n", msg.id, msg.x, msg.y, msg.time);
-				tanks[msg.id].AddMessage(msg);
+				Snakes[msg.id].AddMessage(msg);
 			}
 
-			//Update the tanks
-			for( int i = 0; i < sizeof( tanks ) / sizeof( Tank ); i++ ) {
-				tanks[i].Update( dt );	//Update the real position of the tank with the info from the latest packet
+			//Update the Snakes
+			for( int i = 0; i < sizeof( Snakes ) / sizeof( Snake ); i++ ) {
+				Snakes[i].Update( dt );	//Update the real position of the Snake with the info from the latest packet
 				if( i != netSimulator.m_MyID ) {
-					//Get the predicted position of the tank at the current Game Time and move the ghost to that position
-					tanks[i].setGhostPosition( tanks[i].RunPrediction( netSimulator.Time() ) );
+					//Get the predicted position of the Snake at the current Game Time and move the ghost to that position
+					Snakes[i].setGhostPosition( Snakes[i].RunPrediction( netSimulator.Time() ) );
 
 					if( netSimulator.Time() > nextPrint ) {
-						//Get the predicted position of the tank at a specific interval and print it to the console
-						sf::Vector2f predictedPosition = tanks[i].RunPrediction( nextPrint );
+						//Get the predicted position of the Snake at a specific interval and print it to the console
+						sf::Vector2f predictedPosition = Snakes[i].RunPrediction( nextPrint );
 						printf( "\tPredicted positiion:  (%.2f, %.2f), Time =%.2f\n", predictedPosition.x, predictedPosition.y, nextPrint );
 						nextPrint = nextPrint + (sendRate * 0.25f);	//Print 4 times per packet
 					}
@@ -114,8 +119,8 @@ int main() {
 		//Render the scene
 		window.clear();
 		window.draw(floor);
-		for (auto& tank : tanks) {
-			tank.Render(&window);
+		for (auto& Snake : Snakes) {
+			Snake.Render(&window);
 		}
 		window.draw(debugText);
 		window.display();		
