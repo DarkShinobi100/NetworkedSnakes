@@ -2,8 +2,8 @@
 #include <sstream>
 #include <iomanip>
 #include "Snake.h"
+#include "Apple.h"
 #include "Networking.h"
-#include "TankMessage.h"
 #include "SnakeMessage.h"
 
 //Rounds a float to two decimal places and turns it into a string
@@ -19,6 +19,10 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
+	Apple apple;
+	apple.setPosition(100.0, 250);
+	apple.SetRenderMode(Apple::RenderMode::REAL_ONLY);
+
 	//Create two Snakes (Can also accept "black" and "red")
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
@@ -101,7 +105,7 @@ int main() {
 			netSimulator.Update(dt);
 			//Get any 'network' messages that are available
 			while (netSimulator.ReceiveMessage(msg)) {
-				printf("Received message: ID= %d, Pos = (%.2f, %.2f), Time =%.2f\n", msg.id, msg.x, msg.y, msg.time);
+				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f, Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion, msg.time);
 				Snakes[msg.id].AddMessage(msg);
 			}
 
@@ -120,6 +124,7 @@ int main() {
 					}
 				}
 			}
+
 		}
 		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
 
@@ -129,6 +134,7 @@ int main() {
 		for (auto& Snake : Snakes) {
 			Snake.Render(&window);
 		}
+		apple.Render(&window);
 		window.draw(debugText);
 		window.display();		
 	}

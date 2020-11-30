@@ -12,10 +12,6 @@ Snake::Snake(std::string color) : sf::Sprite()
 	m_GhostSprite.setColor(sf::Color(255, 255, 255, 128));
 	m_GhostSprite.setOrigin(getTextureRect().width / 2, getTextureRect().height / 2);
 	setGhostPosition(getPosition());
-
-	m_BarrelSprite.setTexture(m_BarrelTexture);
-	m_BarrelSprite.setOrigin(6, 2);
-	m_BarrelSprite.setPosition(getPosition());
 }
 
 
@@ -35,7 +31,6 @@ void Snake::Update(float dt)
 
 void Snake::setPosition(float x, float y) {
 	sf::Sprite::setPosition(x, y);
-	m_BarrelSprite.setPosition(getPosition());
 }
 
 void Snake::setRotation(float Rotation) {
@@ -79,7 +74,6 @@ const void Snake::Render(sf::RenderWindow* window) {
 		window->draw(m_GhostSprite);
 	if (m_RenderMode != 1) {
 		window->draw(*this);
-		window->draw(m_BarrelSprite);
 	}
 }
 

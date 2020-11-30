@@ -57,7 +57,7 @@ void Networking::Update(float dt)
 
 		m_SentX += (m_SentVX * m_SendRate);
 		m_SentY += (m_SentVY * m_SendRate);
-		m_SentRotation += (m_SentVX * m_SendRate);
+		m_SentRotation += m_SendRate;
 	}
 
 }

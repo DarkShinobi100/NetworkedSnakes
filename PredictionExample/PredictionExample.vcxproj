@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Apple.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Networking.cpp" />
     <ClCompile Include="NetworkSimulator.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Apple.h" />
     <ClInclude Include="Networking.h" />
     <ClInclude Include="NetworkSimulator.h" />
     <ClInclude Include="Snake.h" />

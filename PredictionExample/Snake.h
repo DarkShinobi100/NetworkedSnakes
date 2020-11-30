@@ -35,13 +35,10 @@ public:
 	void Reset();
 
 private:
-	sf::Sprite	m_BarrelSprite;
 	sf::Sprite	m_GhostSprite;
 
 	sf::Texture m_BodyTexture;
-	sf::Texture m_BarrelTexture;
 	float		m_BodyRotation;
-	float		m_BarrelRotation;
 
 	RenderMode	m_RenderMode = RenderMode::REAL_AND_PREDICTED;
 
