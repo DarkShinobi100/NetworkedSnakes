@@ -76,9 +76,17 @@ int main() {
 				}
 
 				if (event.key.code == sf::Keyboard::Key::A) {
-					Snakes[0].setPosition(1.0f,1.0f); 
+
+					Snakes[0].setRotation(Snakes[0].GetRotation() + 1.0);
+					//Snakes[0].setPosition(Snakes[0].GetPosition().x -1.0, Snakes[0].GetPosition().y);
+				}
+				if (event.key.code == sf::Keyboard::Key::D) {
+
+					Snakes[0].setRotation(Snakes[0].GetRotation() - 1.0);
+					//Snakes[0].setPosition(Snakes[0].GetPosition().x + 1.0, Snakes[0].GetPosition().y);
 				}
 			}
+			Snakes[0].Move();
 		}
 
 		//If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already

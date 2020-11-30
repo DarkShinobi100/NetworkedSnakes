@@ -42,6 +42,28 @@ void Snake::setRotation(float Rotation) {
 	sf::Sprite::setRotation(Rotation);
 }
 
+sf::Vector2f Snake::GetPosition() {
+	sf::Vector2f Position = sf::Sprite::getPosition();
+	return Position;
+}
+
+float Snake::GetRotation() {
+	 float Rotation = sf::Sprite::getRotation();
+	 return Rotation;
+}
+
+void Snake::Move()
+{
+	//Convert angle to radians
+	float angleRADS = (3.1415926536 / 180) * (GetRotation());
+
+	//Set x and y
+	float xValue = 0.5f * cos(angleRADS);
+	float yValue = 0.5f * sin(angleRADS);
+
+	setPosition(GetPosition().x + xValue,GetPosition().y + yValue);
+}
+
 //Use this to set the prediction position
 void Snake::setGhostPosition(sf::Vector2f pos) {
 	m_GhostSprite.setPosition(pos);
