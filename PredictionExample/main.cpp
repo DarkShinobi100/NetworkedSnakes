@@ -127,8 +127,31 @@ int main() {
 			{
 				if (apple[i].GetActive())
 				{
-					//TODO collision Detection
+					//collision Detection
+					//based on example available here: https://www.sonarlearning.co.uk/questions.php?question-topic=630
+					sf::FloatRect shape1 = Snakes[0].getGlobalBounds();
+					sf::FloatRect shape2 = apple[i].getGlobalBounds();
+					sf::FloatRect shape3 = Snakes[1].getGlobalBounds();
 
+					if (Snakes[0].getPosition().x < apple[i].getPosition().x + shape2.width &&
+						Snakes[0].getPosition().x + shape1.width > apple[i].getPosition().x &&
+						Snakes[0].getPosition().y < apple[i].getPosition().y + shape2.height &&
+						shape1.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
+					{
+						//Collition detected with player 1
+						player1Score++;
+						apple[i].SetActive(false);
+					}
+					else 
+					if (Snakes[1].getPosition().x < apple[i].getPosition().x + shape2.width &&
+						Snakes[1].getPosition().x + shape3.width > apple[i].getPosition().x &&
+						Snakes[1].getPosition().y < apple[i].getPosition().y + shape2.height &&
+						shape3.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
+					{
+					//Collition detected with player 2
+					player2Score++;
+					apple[i].SetActive(false);
+					}
 				}
 			}
 

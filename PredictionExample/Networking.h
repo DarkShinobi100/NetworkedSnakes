@@ -40,6 +40,7 @@ private:
 	float m_XPosition;
 	float m_YPosition;
 	float m_Rotation;
+	int m_Score;
 	float m_Latency = 0.1f;
 	float m_SendRate = 0.5f;
 };

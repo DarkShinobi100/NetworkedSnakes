@@ -10,6 +10,9 @@ struct SnakeMessage {
 	/** The rotation of this tank within the game world. */
 	float Rotataion;
 
+	/** The score of this tank within the game world. */
+	int score;
+
 	/** The time at which this message was sent.
 	(Not the time at which it was received!) */
 	float time;

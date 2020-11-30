@@ -14,6 +14,7 @@ Networking::Networking(float sendRate, float latency) :
 	m_XPosition(0),
 	m_YPosition(0),
 	m_Rotation(0),
+	m_Score(0),
 	m_SendRate(sendRate),
 	m_Latency(latency)
 {
@@ -45,7 +46,7 @@ void Networking::Update(float dt)
 	// Simulate messages being sent from a remote host every "period",
 	// delivered to this host after "latency".
 	while (m_SentTime + m_Latency < m_Time) {
-		m_MessageQueue.push({ 1, m_SentX, m_SentY,m_SentRotation, m_SentTime });
+		m_MessageQueue.push({ 1, m_SentX, m_SentY,m_SentRotation,m_Score, m_SentTime });
 
 		m_SentTime += m_SendRate;
 
@@ -91,4 +92,5 @@ void Networking::Reset() {
 	m_SentVX = 30;
 	m_SentVY = 20;
 	m_SentRotation = 10;
+	m_Score = 0;
 }
