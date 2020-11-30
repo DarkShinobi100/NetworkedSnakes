@@ -19,9 +19,25 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
-	Apple apple;
-	apple.setPosition(100.0, 250);
-	apple.SetRenderMode(Apple::RenderMode::REAL_ONLY);
+	Apple apple[30];
+	for (int i = 0; i < 30; i++)
+	{
+		if (i < 10) 
+		{
+			apple[i].setPosition(10 * i, 10);
+		}
+		if (i >= 10 && i < 20)
+		{
+			apple[i].setPosition(10 * i, 10 * i);
+		}
+		if (i >= 20 && i < 30)
+		{
+			apple[i].setPosition(10 * i, 20 * i);
+		}
+
+		apple[i].SetRenderMode(Apple::RenderMode::REAL_ONLY);
+	}
+
 
 	//Create two Snakes (Can also accept "black" and "red")
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
@@ -90,6 +106,7 @@ int main() {
 			}
 			//Move player 1 forward at all times
 			Snakes[0].Move();
+			
 		}
 
 		//If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already
@@ -134,7 +151,16 @@ int main() {
 		for (auto& Snake : Snakes) {
 			Snake.Render(&window);
 		}
-		apple.Render(&window);
+
+		for (int i = 0; i < 30; i++)
+		{
+			//is this apple visible
+			if (apple[i].GetActive())
+			{
+				apple[i].Render(&window);
+			}
+		}
+
 		window.draw(debugText);
 		window.display();		
 	}
