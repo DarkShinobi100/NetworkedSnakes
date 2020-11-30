@@ -24,19 +24,18 @@ int main() {
 	{
 		if (i < 10) 
 		{
-			apple[i].setPosition(50 * i, 10);
+			apple[i].setPosition(50 + (60 * i), 85);
 		}
 		if (i >= 10 && i < 20)
 		{
-			apple[i].setPosition(50 * i, 10 * i);
+			apple[i].setPosition(50 + (60 * (i-10)), 300);
 		}
 		if (i >= 20 && i < 30)
 		{
-			apple[i].setPosition(10 * i, 20 * i);
+			apple[i].setPosition(50 + (60 * (i - 20)), 425);
 		}
 
 		apple[i].SetRenderMode(Apple::RenderMode::REAL_ONLY);
-		apple[i].SetActive(true);
 	}
 
 	int player1Score = 0;
