@@ -3,6 +3,7 @@
 #include <queue>
 #include "SnakeMessage.h"
 #include<SFML/Network.hpp>
+#include "Snake.h"
 
 //This is a network simulation and doesn't actually do any networking!
 class Networking
@@ -27,6 +28,9 @@ public:
 
 	void SetLatency(float);
 	void SetSendRate(float);
+	void SendData(int ID, Snake player, float time);
+
+	sf::Packet ReceiveData();
 
 	void Reset();
 
@@ -50,7 +54,7 @@ private:
 	sf::UdpSocket ConnectionSocket;
 
 	sf::IpAddress IpTarget;
-	int PortTarget;
+	unsigned short PortTarget = 0;
 
 	sf::Packet ReceivedData;
 	sf::Packet SentData;

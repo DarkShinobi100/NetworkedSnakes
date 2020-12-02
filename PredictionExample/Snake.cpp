@@ -51,6 +51,11 @@ float Snake::GetRotation() {
 	 return Rotation;
 }
 
+int Snake::GetScore()
+{
+	return m_Score;
+}
+
 void Snake::Move()
 {
 	//Convert angle to radians

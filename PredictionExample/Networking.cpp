@@ -104,6 +104,28 @@ void Networking::SetSendRate(float sendRate)
 	m_SendRate = sendRate;
 }
 
+void Networking::SendData(int ID, Snake player, float time)
+{
+	//package data to send
+	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<<time;
+
+	if (ConnectionSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::Done)
+	{
+		// error...
+	}
+}
+
+sf::Packet Networking::ReceiveData()
+{
+	//receive our data
+	if (ConnectionSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::Done)
+	{
+		// error...
+	}
+	return     ReceivedData;
+}
+
+
 void Networking::Reset() {
 	m_Time = 0.0f;
 	m_SentTime = 0.0f;

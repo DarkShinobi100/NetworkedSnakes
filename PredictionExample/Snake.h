@@ -25,6 +25,7 @@ public:
 	void setPosition(float x, float y);
 	void setRotation(float Rotation);
 	void setScore(int value);
+	int GetScore();
 	sf::Vector2f GetPosition();
 	float GetRotation();
 
