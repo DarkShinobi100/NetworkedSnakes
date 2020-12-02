@@ -1,6 +1,7 @@
 #include <SFML\Graphics.hpp>
 #include <sstream>
 #include <iomanip>
+#include<iostream>
 #include "Snake.h"
 #include "Apple.h"
 #include "Networking.h"
@@ -19,6 +20,25 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
+
+	//setting up networking
+	int Port = rand() % 65535;
+	int IP = 0;
+
+	std::cout << "\nYour IP:" << IP;
+	std::cout << "\nYour  open Port Number:"<< Port;
+
+	int IpTarget;
+	std::cout << "\nEnter your Enemies IP:";
+	std::cin >> IpTarget;
+	std::cout << "\nYour Enemys IP is: " << IpTarget;
+	
+	int PortTarget;
+	std::cout << "\nEnter your Enemies Port number:";
+	std::cin >> PortTarget;
+	std::cout << "\nYour Enemys Port Number is: " << PortTarget;
+
+
 	Apple apple[30]; //set up apples
 	for (int i = 0; i < 30; i++)
 	{
@@ -123,43 +143,44 @@ int main() {
 
 					Snakes[0].setRotation(Snakes[0].GetRotation() + 1.0);
 				}
-			}
-			//Move player 1 forward at all times
-			Snakes[0].Move();
-			for (int i = 0; i < 30; i++)
-			{
-				if (apple[i].GetActive())
-				{
-					//collision Detection
-					//based on example available here: https://www.sonarlearning.co.uk/questions.php?question-topic=630
-					sf::FloatRect shape1 = Snakes[0].getGlobalBounds();
-					sf::FloatRect shape2 = apple[i].getGlobalBounds();
-					sf::FloatRect shape3 = Snakes[1].getGlobalBounds();
+			}			
+		}
 
-					if (Snakes[0].getPosition().x < apple[i].getPosition().x + shape2.width &&
-						Snakes[0].getPosition().x + shape1.width > apple[i].getPosition().x &&
-						Snakes[0].getPosition().y < apple[i].getPosition().y + shape2.height &&
-						shape1.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
-					{
-						//Collition detected with player 1
-						player1Score++;
-						apple[i].SetActive(false);
-						RNG = rand() % 30;
-						apple[RNG].SetActive(true);
-					}
-					else 
+		//Move player 1 forward at all times
+		Snakes[0].Move();
+		for (int i = 0; i < 30; i++)
+		{
+			if (apple[i].GetActive())
+			{
+				//collision Detection
+				//based on example available here: https://www.sonarlearning.co.uk/questions.php?question-topic=630
+				sf::FloatRect shape1 = Snakes[0].getGlobalBounds();
+				sf::FloatRect shape2 = apple[i].getGlobalBounds();
+				sf::FloatRect shape3 = Snakes[1].getGlobalBounds();
+
+				if (Snakes[0].getPosition().x < apple[i].getPosition().x + shape2.width &&
+					Snakes[0].getPosition().x + shape1.width > apple[i].getPosition().x &&
+					Snakes[0].getPosition().y < apple[i].getPosition().y + shape2.height &&
+					shape1.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
+				{
+					//Collition detected with player 1
+					player1Score++;
+					apple[i].SetActive(false);
+					RNG = rand() % 30;
+					apple[RNG].SetActive(true);
+				}
+				else
 					if (Snakes[1].getPosition().x < apple[i].getPosition().x + shape2.width &&
 						Snakes[1].getPosition().x + shape3.width > apple[i].getPosition().x &&
 						Snakes[1].getPosition().y < apple[i].getPosition().y + shape2.height &&
 						shape3.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
 					{
-					//Collition detected with player 2
-					player2Score++;
-					apple[i].SetActive(false);
-					RNG = rand() % 30;
-					apple[RNG].SetActive(true);
+						//Collition detected with player 2
+						player2Score++;
+						apple[i].SetActive(false);
+						RNG = rand() % 30;
+						apple[RNG].SetActive(true);
 					}
-				}
 			}
 		}
 

@@ -1,10 +1,9 @@
 ﻿  main.cpp
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(27,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(31,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(35,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(121,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(125,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(203,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(205,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(43,7): warning C4101: 'AppleActive': unreferenced local variable
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(45,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(49,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(53,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(138,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(142,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(221,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(223,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   PredictionExample.vcxproj -> C:\Users\User\Documents\C++\Networking\NetworkedSnakes\Debug\PredictionExample.exe
