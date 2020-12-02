@@ -28,7 +28,7 @@ public:
 
 	void SetLatency(float);
 	void SetSendRate(float);
-	void SendData(int ID, Snake player, float time);
+	void SendData(int ID, Snake player);
 
 	sf::Packet ReceiveData();
 

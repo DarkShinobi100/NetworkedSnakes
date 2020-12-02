@@ -26,6 +26,7 @@ Networking::~Networking()
 
 void Networking::StartConnection()
 {
+	//loacla host: 127.0.0.1
 
 	// used for refernece: https://www.sfml-dev.org/tutorials/2.5/network-socket.php
 	//setting up networking
@@ -62,24 +63,24 @@ void Networking::Update(float dt)
 {
 	m_Time += dt;
 
-	// Simulate messages being sent from a remote host every "period",
-	// delivered to this host after "latency".
-	while (m_SentTime + m_Latency < m_Time) {
-		m_MessageQueue.push({ 1, m_SentX, m_SentY,m_SentRotation,m_Score, m_SentTime });
+	//// Simulate messages being sent from a remote host every "period",
+	//// delivered to this host after "latency".
+	//while (m_SentTime + m_Latency < m_Time) {
+	//	m_MessageQueue.push({ 1, m_SentX, m_SentY,m_SentRotation,m_Score, m_SentTime });
 
-		m_SentTime += m_SendRate;
+	//	m_SentTime += m_SendRate;
 
-		// Change the path of the snake after a while.
-		if (m_SentTime >= 12.77f) {
-			m_SentVX = 25.0f;
-			m_SentVY = -10.0f;
-		}
+	//	// Change the path of the snake after a while.
+	//	if (m_SentTime >= 12.77f) {
+	//		m_SentVX = 25.0f;
+	//		m_SentVY = -10.0f;
+	//	}
 
-		m_SentX += (m_SentVX * m_SendRate);
-		m_SentY += (m_SentVY * m_SendRate);
-		m_SentRotation += m_SendRate;
-		m_Score += 1;
-	}
+	//	m_SentX += (m_SentVX * m_SendRate);
+	//	m_SentY += (m_SentVY * m_SendRate);
+	//	m_SentRotation += m_SendRate;
+	//	m_Score += 1;
+	//}
 
 }
 
@@ -104,15 +105,19 @@ void Networking::SetSendRate(float sendRate)
 	m_SendRate = sendRate;
 }
 
-void Networking::SendData(int ID, Snake player, float time)
-{
+void Networking::SendData(int ID, Snake player)
+{   //Make unblocking
+	ConnectionSocket.setBlocking(false);
+	
 	//package data to send
-	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<<time;
+	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<< m_Time;
 
 	if (ConnectionSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::Done)
 	{
+		std::cout << "\nSend Failed:";
 		// error...
 	}
+
 }
 
 sf::Packet Networking::ReceiveData()
@@ -120,6 +125,7 @@ sf::Packet Networking::ReceiveData()
 	//receive our data
 	if (ConnectionSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::Done)
 	{
+		std::cout << "\nReceive Failed:";
 		// error...
 	}
 	return     ReceivedData;

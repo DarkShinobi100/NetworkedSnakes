@@ -171,22 +171,22 @@ int main() {
 			}
 		}
 
-		//If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already
-		if( netSimulator.Time() < 1.0f ) {
-			printf( "BEGIN SIMULATION\n" );
-			netSimulator.Update(startTime);
-		}
+		////If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already
+		//if( netSimulator.Time() < 1.0f ) {
+		//	printf( "BEGIN SIMULATION\n" );
+		//	netSimulator.Update(startTime);
+		//}
 
-		if (netSimulator.Time() < 18.0f) {
-			SnakeMessage msg;
+		//if (netSimulator.Time() < 18.0f) {
+		//	SnakeMessage msg;
 
-			//Update the network simulation
-			netSimulator.Update(dt);
-			//Get any 'network' messages that are available
-			while (netSimulator.ReceiveMessage(msg)) {
-				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
-				Snakes[msg.id].AddMessage(msg);
-			}
+		//	//Update the network simulation
+		//	netSimulator.Update(dt);
+		//	//Get any 'network' messages that are available
+		//	while (netSimulator.ReceiveMessage(msg)) {
+		//		printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
+		//		Snakes[msg.id].AddMessage(msg);
+		//	}
 
 			//Update the Snakes
 			for( int i = 0; i < sizeof( Snakes ) / sizeof( Snake ); i++ ) {
@@ -204,7 +204,30 @@ int main() {
 				}
 			}
 
-		}
+		//declare message type
+		SnakeMessage msg;
+
+		//update time
+		netSimulator.Update(dt);
+		//sent this players data
+		netSimulator.SendData(1, Snakes[0]);
+
+		//receive enemy players data
+		sf::Packet ReceivedEnemyData = netSimulator.ReceiveData();
+		ReceivedEnemyData >> msg.id >> msg.x >> msg.y>>msg.Rotataion>>msg.score>>msg.time;
+			
+		Snakes[1].AddMessage(msg);
+		Snakes[1].Update(dt);
+		Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
+
+		//Update the network simulation
+			netSimulator.Update(dt);
+			//Get any 'network' messages that are available
+			while (netSimulator.ReceiveMessage(msg)) {
+				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
+				Snakes[msg.id].AddMessage(msg);
+			}
+
 		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
 		
 		ScoreP1Text.setString("Player 1 score: " + Stringify(player1Score));
