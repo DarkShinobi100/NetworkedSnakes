@@ -2,6 +2,7 @@
 
 #include <queue>
 #include "SnakeMessage.h"
+#include<SFML/Network.hpp>
 
 //This is a network simulation and doesn't actually do any networking!
 class Networking
@@ -44,5 +45,11 @@ private:
 	int m_Score;
 	float m_Latency = 0.1f;
 	float m_SendRate = 0.5f;
+
+	sf::UdpSocket PlayerSocket;
+	sf::UdpSocket ConnectionSocket;
+
+	sf::IpAddress IpTarget;
+	int PortTarget;
 };
 

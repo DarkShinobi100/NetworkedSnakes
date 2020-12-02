@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-
 Networking::Networking(float sendRate, float latency) :
 	m_Time(0),
 	m_SentTime(0),
@@ -27,22 +26,24 @@ Networking::~Networking()
 
 void Networking::StartConnection()
 {
+
+	// used for refernece: https://www.sfml-dev.org/tutorials/2.5/network-socket.php
 	//setting up networking
-	int Port = rand() % 65535;
-	int IP = 0;
+	// bind the socket to a port
+	if (PlayerSocket.bind(sf::Socket::AnyPort) != sf::Socket::Done)
+	{
+		// error...
+	}
+	std::cout << "\nYour IP:" << sf::IpAddress::getLocalAddress();
+	std::cout << "\nYour  open Port Number:" << PlayerSocket.getLocalPort();
 
-	std::cout << "\nYour IP:" << IP;
-	std::cout << "\nYour  open Port Number:" << Port;
 
-	int IpTarget;
 	std::cout << "\nEnter your Enemies IP:";
 	std::cin >> IpTarget;
-	std::cout << "\nYour Enemys IP is: " << IpTarget;
 
-	int PortTarget;
 	std::cout << "\nEnter your Enemies Port number:";
 	std::cin >> PortTarget;
-	std::cout << "\nYour Enemys Port Number is: " << PortTarget;
+	
 }
 
 bool Networking::ReceiveMessage(SnakeMessage& result)

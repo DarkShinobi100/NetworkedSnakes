@@ -1,7 +1,7 @@
 #include <SFML\Graphics.hpp>
+#include<SFML/Network.hpp>
 #include <sstream>
 #include <iomanip>
-
 #include "Snake.h"
 #include "Apple.h"
 #include "Networking.h"
@@ -19,8 +19,7 @@ std::string Stringify( float value ) {
 int main() {
 	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
-	
-	
+		
 	Apple apple[30]; //set up apples
 	for (int i = 0; i < 30; i++)
 	{
