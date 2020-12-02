@@ -25,7 +25,25 @@ Networking::~Networking()
 {
 }
 
+void Networking::StartConnection()
+{
+	//setting up networking
+	int Port = rand() % 65535;
+	int IP = 0;
 
+	std::cout << "\nYour IP:" << IP;
+	std::cout << "\nYour  open Port Number:" << Port;
+
+	int IpTarget;
+	std::cout << "\nEnter your Enemies IP:";
+	std::cin >> IpTarget;
+	std::cout << "\nYour Enemys IP is: " << IpTarget;
+
+	int PortTarget;
+	std::cout << "\nEnter your Enemies Port number:";
+	std::cin >> PortTarget;
+	std::cout << "\nYour Enemys Port Number is: " << PortTarget;
+}
 
 bool Networking::ReceiveMessage(SnakeMessage& result)
 {

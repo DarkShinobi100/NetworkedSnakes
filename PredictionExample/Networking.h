@@ -12,6 +12,7 @@ public:
 	Networking(float sendRate, float latency);
 	~Networking();
 
+	void StartConnection();
 
 	/** Receive the next message from the network. Non-blocking.
 	Returns true if a message was received, false if there are no more messages to process. */

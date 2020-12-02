@@ -1,7 +1,7 @@
 #include <SFML\Graphics.hpp>
 #include <sstream>
 #include <iomanip>
-#include<iostream>
+
 #include "Snake.h"
 #include "Apple.h"
 #include "Networking.h"
@@ -20,25 +20,7 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(720, 640), "Snake Networked");
 	window.setFramerateLimit(60);	//Request 60 frames per second
 	
-
-	//setting up networking
-	int Port = rand() % 65535;
-	int IP = 0;
-
-	std::cout << "\nYour IP:" << IP;
-	std::cout << "\nYour  open Port Number:"<< Port;
-
-	int IpTarget;
-	std::cout << "\nEnter your Enemies IP:";
-	std::cin >> IpTarget;
-	std::cout << "\nYour Enemys IP is: " << IpTarget;
 	
-	int PortTarget;
-	std::cout << "\nEnter your Enemies Port number:";
-	std::cin >> PortTarget;
-	std::cout << "\nYour Enemys Port Number is: " << PortTarget;
-
-
 	Apple apple[30]; //set up apples
 	for (int i = 0; i < 30; i++)
 	{
@@ -69,6 +51,7 @@ int main() {
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
 	Snakes[0].setPosition(64, 256);
+	Snakes[0].SetRenderMode(Snake::RenderMode::REAL_ONLY);
 
 	Snakes[1].setPosition(416, 128);
 	Snakes[1].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
@@ -116,6 +99,10 @@ int main() {
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
 	netSimulator.m_MyID = 0;	//On the network, we are Snake 0
+
+
+	//Ask user for inputs
+	netSimulator.StartConnection();
 	
 	while (window.isOpen()) {
 		//Get the time since the last frame in milliseconds
