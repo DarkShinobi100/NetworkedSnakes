@@ -24,7 +24,7 @@ void Snake::Update(float dt)
 {
 	if (m_Messages.size() < 1)
 		return;
-	SnakeMessage latestMessage = m_Messages.back();
+	latestMessage = m_Messages.back();
 	setPosition(latestMessage.x, latestMessage.y);
 	setRotation(latestMessage.Rotataion);
 }
@@ -35,6 +35,10 @@ void Snake::setPosition(float x, float y) {
 
 void Snake::setRotation(float Rotation) {
 	sf::Sprite::setRotation(Rotation);
+}
+
+void Snake::setScore(int value) {
+	m_Score = latestMessage.score;
 }
 
 sf::Vector2f Snake::GetPosition() {

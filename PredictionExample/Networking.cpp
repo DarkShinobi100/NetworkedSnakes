@@ -69,7 +69,7 @@ void Networking::Update(float dt)
 
 		m_SentTime += m_SendRate;
 
-		// Change the path of the tank after a while.
+		// Change the path of the snake after a while.
 		if (m_SentTime >= 12.77f) {
 			m_SentVX = 25.0f;
 			m_SentVY = -10.0f;
@@ -78,6 +78,7 @@ void Networking::Update(float dt)
 		m_SentX += (m_SentVX * m_SendRate);
 		m_SentY += (m_SentVY * m_SendRate);
 		m_SentRotation += m_SendRate;
+		m_Score += 1;
 	}
 
 }

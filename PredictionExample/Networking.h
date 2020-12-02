@@ -51,5 +51,8 @@ private:
 
 	sf::IpAddress IpTarget;
 	int PortTarget;
+
+	sf::Packet ReceivedData;
+	sf::Packet SentData;
 };
 

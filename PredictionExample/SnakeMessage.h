@@ -1,16 +1,16 @@
 #pragma once
 /** A position update message. */
 struct SnakeMessage {
-	/** The object number of this tank within the game world. */
+	/** The object number of this snake within the game world. */
 	int id;
 
-	/** The coordinates of this tank within the game world. */
+	/** The coordinates of this snake within the game world. */
 	float x, y;
 
-	/** The rotation of this tank within the game world. */
+	/** The rotation of this snake within the game world. */
 	float Rotataion;
 
-	/** The score of this tank within the game world. */
+	/** The score of this snake within the game world. */
 	int score;
 
 	/** The time at which this message was sent.

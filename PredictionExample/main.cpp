@@ -83,7 +83,7 @@ int main() {
 	ScoreP2Text.setFont(montserrat);
 	ScoreP2Text.setOutlineColor(sf::Color::Black);
 	ScoreP2Text.setOutlineThickness(1.f);
-	ScoreP2Text.setPosition(450, 25);
+	ScoreP2Text.setPosition(425, 25);
 
 	//Clock for timing the 'dt' value
 	sf::Clock clock;
@@ -136,6 +136,7 @@ int main() {
 		Snakes[0].Move();
 		for (int i = 0; i < 30; i++)
 		{
+			//collision with apples
 			if (apple[i].GetActive())
 			{
 				//collision Detection
@@ -183,7 +184,7 @@ int main() {
 			netSimulator.Update(dt);
 			//Get any 'network' messages that are available
 			while (netSimulator.ReceiveMessage(msg)) {
-				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f, Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion, msg.time);
+				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
 				Snakes[msg.id].AddMessage(msg);
 			}
 

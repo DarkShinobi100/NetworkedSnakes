@@ -24,7 +24,7 @@ public:
 	void SetRenderMode(const RenderMode renderMode) { m_RenderMode = renderMode; }
 	void setPosition(float x, float y);
 	void setRotation(float Rotation);
-
+	void setScore(int value);
 	sf::Vector2f GetPosition();
 	float GetRotation();
 
@@ -39,9 +39,10 @@ private:
 
 	sf::Texture m_BodyTexture;
 	float		m_BodyRotation;
-
+	int		m_Score = 0;
 	RenderMode	m_RenderMode = RenderMode::REAL_AND_PREDICTED;
 
 	std::vector<SnakeMessage> m_Messages;
+	SnakeMessage latestMessage;
 };
 
