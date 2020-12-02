@@ -117,7 +117,6 @@ void Networking::SendData(int ID, Snake player)
 		std::cout << "\nSend Failed:";
 		// error...
 	}
-
 }
 
 sf::Packet Networking::ReceiveData()

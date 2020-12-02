@@ -221,12 +221,13 @@ int main() {
 		Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
 
 		//Update the network simulation
-			netSimulator.Update(dt);
-			//Get any 'network' messages that are available
-			while (netSimulator.ReceiveMessage(msg)) {
-				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
-				Snakes[msg.id].AddMessage(msg);
-			}
+		netSimulator.Update(dt);
+		//Get any 'network' messages that are available
+		while (netSimulator.ReceiveMessage(msg)) 
+		{
+			printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
+			Snakes[msg.id].AddMessage(msg);
+		}
 
 		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
 		
