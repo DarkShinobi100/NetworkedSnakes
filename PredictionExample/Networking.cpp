@@ -109,12 +109,12 @@ void Networking::SetSendRate(float sendRate)
 	m_SendRate = sendRate;
 }
 
-void Networking::SendData(int ID, Snake player)
+void Networking::SendData(sf::Packet SentData)
 {   //Make unblocking
 	//PlayerSocket.setBlocking(false);
 	
 	//package data to send
-	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<< m_Time;
+//	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<< m_Time;
 
 	if (PlayerSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::Done)
 	{
@@ -125,6 +125,7 @@ void Networking::SendData(int ID, Snake player)
 
 sf::Packet Networking::ReceiveData()
 {
+	SnakeMessage msg;
 	//receive our data
 	if (PlayerSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::Done)
 	{

@@ -171,37 +171,20 @@ int main() {
 			}
 		}
 
-		////If we're at the start, just advance the time by 3.5 seconds, so we have a few packets in the queue already
-		//if( netSimulator.Time() < 1.0f ) {
-		//	printf( "BEGIN SIMULATION\n" );
-		//	netSimulator.Update(startTime);
-		//}
-
-		//if (netSimulator.Time() < 18.0f) {
-		//	SnakeMessage msg;
-
-		//	//Update the network simulation
-		//	netSimulator.Update(dt);
-		//	//Get any 'network' messages that are available
-		//	while (netSimulator.ReceiveMessage(msg)) {
-		//		printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
-		//		Snakes[msg.id].AddMessage(msg);
-		//	}
-
 			//Update the Snakes
 			for( int i = 0; i < sizeof( Snakes ) / sizeof( Snake ); i++ ) {
 				Snakes[i].Update( dt );	//Update the real position of the Snake with the info from the latest packet
-				if( i != netSimulator.m_MyID ) {
-					//Get the predicted position of the Snake at the current Game Time and move the ghost to that position
-					Snakes[i].setGhostPosition( Snakes[i].RunPrediction( netSimulator.Time() ) );
+				//if( i != netSimulator.m_MyID ) {
+				//	//Get the predicted position of the Snake at the current Game Time and move the ghost to that position
+				//	Snakes[i].setGhostPosition( Snakes[i].RunPrediction( netSimulator.Time() ) );
 
-					if( netSimulator.Time() > nextPrint ) {
-						//Get the predicted position of the Snake at a specific interval and print it to the console
-						sf::Vector2f predictedPosition = Snakes[i].RunPrediction( nextPrint );
-						printf( "\tPredicted positiion:  (%.2f, %.2f), Time =%.2f\n", predictedPosition.x, predictedPosition.y, nextPrint );
-						nextPrint = nextPrint + (sendRate * 0.25f);	//Print 4 times per packet
-					}
-				}
+				//	if( netSimulator.Time() > nextPrint ) {
+				//		//Get the predicted position of the Snake at a specific interval and print it to the console
+				//		sf::Vector2f predictedPosition = Snakes[i].RunPrediction( nextPrint );
+				//		printf( "\tPredicted positiion:  (%.2f, %.2f), Time =%.2f\n", predictedPosition.x, predictedPosition.y, nextPrint );
+				//		nextPrint = nextPrint + (sendRate * 0.25f);	//Print 4 times per packet
+				//	}
+				//}
 			}
 
 		//declare message type
@@ -210,7 +193,10 @@ int main() {
 		//update time
 		netSimulator.Update(dt);
 		//sent this players data
-		netSimulator.SendData(1, Snakes[0]);
+
+		sf::Packet SentData;
+		SentData << 1 << Snakes[0].getPosition().x << Snakes[0].getPosition().y << Snakes[0].GetRotation() << Snakes[0].GetScore() << netSimulator.Time();
+		netSimulator.SendData(SentData);
 
 		//receive enemy players data
 		sf::Packet ReceivedEnemyData = netSimulator.ReceiveData();
@@ -218,16 +204,12 @@ int main() {
 			
 		Snakes[1].AddMessage(msg);
 		Snakes[1].Update(dt);
-		Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
+		//Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
 
 		//Update the network simulation
 		netSimulator.Update(dt);
-		//Get any 'network' messages that are available
-		while (netSimulator.ReceiveMessage(msg)) 
-		{
-			printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
-			Snakes[msg.id].AddMessage(msg);
-		}
+        printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y,msg.Rotataion,msg.score, msg.time);
+
 
 		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
 		
