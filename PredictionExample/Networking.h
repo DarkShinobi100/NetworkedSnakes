@@ -51,7 +51,6 @@ private:
 	float m_SendRate = 0.5f;
 
 	sf::UdpSocket PlayerSocket;
-	sf::UdpSocket ConnectionSocket;
 
 	sf::IpAddress IpTarget;
 	unsigned short PortTarget = 0;

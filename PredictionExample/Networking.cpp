@@ -26,7 +26,7 @@ Networking::~Networking()
 
 void Networking::StartConnection()
 {
-	//loacla host: 127.0.0.1
+	//local host: 127.0.0.1
 
 	// used for refernece: https://www.sfml-dev.org/tutorials/2.5/network-socket.php
 	//setting up networking
@@ -41,7 +41,11 @@ void Networking::StartConnection()
 
 	std::cout << "\nEnter your Enemies IP:";
 	std::cin >> IpTarget;
-
+	
+	//if (IpTarget == 0)
+	{
+		IpTarget = IpTarget.LocalHost;
+	}
 	std::cout << "\nEnter your Enemies Port number:";
 	std::cin >> PortTarget;
 	
@@ -107,12 +111,12 @@ void Networking::SetSendRate(float sendRate)
 
 void Networking::SendData(int ID, Snake player)
 {   //Make unblocking
-	ConnectionSocket.setBlocking(false);
+	//PlayerSocket.setBlocking(false);
 	
 	//package data to send
 	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<< m_Time;
 
-	if (ConnectionSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::Done)
+	if (PlayerSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::Done)
 	{
 		std::cout << "\nSend Failed:";
 		// error...
@@ -122,7 +126,7 @@ void Networking::SendData(int ID, Snake player)
 sf::Packet Networking::ReceiveData()
 {
 	//receive our data
-	if (ConnectionSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::Done)
+	if (PlayerSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::Done)
 	{
 		std::cout << "\nReceive Failed:";
 		// error...
