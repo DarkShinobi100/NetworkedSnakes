@@ -4,6 +4,6 @@ C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cp
 C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(36,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(140,74): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(145,74): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(260,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(262,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(255,85): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(257,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   PredictionExample.vcxproj -> C:\Users\User\Documents\C++\Networking\NetworkedSnakes\Debug\PredictionExample.exe
