@@ -46,16 +46,18 @@ int main() {
 	apple[RNG].SetActive(true);
 
 	bool playerMoved = true;
-
+	int PlayerNumber = 0;
+	int EnemyNumber = 0;
 	//Create two Snakes (Can also accept "black" and "red")
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
 	Snakes[0].setPosition(64, 256);
 	Snakes[0].SetRenderMode(Snake::RenderMode::REAL_ONLY);
+	Snakes[0].setScore(0);
 
 	Snakes[1].setPosition(416, 128);
 	Snakes[1].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
-
+	Snakes[1].setScore(0);
 	//Initialise the background texture and sprite
 	sf::Texture floorTexture;
 	sf::Sprite floor;
@@ -99,11 +101,21 @@ int main() {
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
-	netSimulator.m_MyID = 0;	//On the network, we are Snake 0
-
-
 	//Ask user for inputs
 	netSimulator.StartConnection();
+	if (netSimulator.GetPlayerPort()>netSimulator.GetEnemyPort())
+	{
+		printf("Bigger,, we are the Red snake \n");
+		PlayerNumber = 0;
+		EnemyNumber = 1;
+	}
+	else
+	{
+		printf("smaller, we are the Grey snake \n");
+		EnemyNumber = 0;
+		PlayerNumber = 1;
+	}
+	netSimulator.m_MyID = PlayerNumber;	//On the network, we are Snake 0
 	
 	while (window.isOpen()) {
 		//Get the time since the last frame in milliseconds
@@ -117,7 +129,7 @@ int main() {
 				if (event.key.code == sf::Keyboard::Key::Escape)
 					window.close();
 				if( event.key.code == sf::Keyboard::Key::R ) {
-					Snakes[0].Reset(); Snakes[1].Reset();
+					Snakes[PlayerNumber].Reset(); Snakes[EnemyNumber].Reset();
 					netSimulator.Reset();
 					nextPrint = startTime;
 					printf( "\n\n--------RESET--------\n\n" );
@@ -125,19 +137,19 @@ int main() {
 
 				if (event.key.code == sf::Keyboard::Key::A) {
 
-					Snakes[0].setRotation(Snakes[0].GetRotation() - 1.0);
-					//playerMoved = true;
+					Snakes[PlayerNumber].setRotation(Snakes[PlayerNumber].GetRotation() - 1.0);
+					playerMoved = true;
 				}
 				if (event.key.code == sf::Keyboard::Key::D) {
 
-					Snakes[0].setRotation(Snakes[0].GetRotation() + 1.0);
-					//playerMoved = true;
+					Snakes[PlayerNumber].setRotation(Snakes[PlayerNumber].GetRotation() + 1.0);
+					playerMoved = true;
 				}
 			}			
 		}
 
 		//Move player 1 forward at all times
-		Snakes[0].Move();
+		Snakes[PlayerNumber].Move();
 
 		for (int i = 0; i < 30; i++)
 		{
@@ -146,33 +158,20 @@ int main() {
 			{
 				//collision Detection
 				//based on example available here: https://www.sonarlearning.co.uk/questions.php?question-topic=630
-				sf::FloatRect shape1 = Snakes[0].getGlobalBounds();
+				sf::FloatRect shape1 = Snakes[PlayerNumber].getGlobalBounds();
 				sf::FloatRect shape2 = apple[i].getGlobalBounds();
-				sf::FloatRect shape3 = Snakes[1].getGlobalBounds();
 
-				if (Snakes[0].getPosition().x < apple[i].getPosition().x + shape2.width &&
-					Snakes[0].getPosition().x + shape1.width > apple[i].getPosition().x &&
-					Snakes[0].getPosition().y < apple[i].getPosition().y + shape2.height &&
-					shape1.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
+				if (Snakes[PlayerNumber].getPosition().x < apple[i].getPosition().x + shape2.width &&
+					Snakes[PlayerNumber].getPosition().x + shape1.width > apple[i].getPosition().x &&
+					Snakes[PlayerNumber].getPosition().y < apple[i].getPosition().y + shape2.height &&
+					shape1.height + Snakes[PlayerNumber].getPosition().y > apple[i].getPosition().y)
 				{
 					//Collition detected with player 1
-					player1Score++;
+					Snakes[PlayerNumber].setScore(Snakes[PlayerNumber].GetScore()+1);
 					apple[i].SetActive(false);
 					RNG = rand() % 30;
 					apple[RNG].SetActive(true);
-				}
-				else
-					if (Snakes[1].getPosition().x < apple[i].getPosition().x + shape2.width &&
-						Snakes[1].getPosition().x + shape3.width > apple[i].getPosition().x &&
-						Snakes[1].getPosition().y < apple[i].getPosition().y + shape2.height &&
-						shape3.height + Snakes[0].getPosition().y > apple[i].getPosition().y)
-					{
-						//Collition detected with player 2
-						player2Score++;
-						apple[i].SetActive(false);
-						RNG = rand() % 30;
-						apple[RNG].SetActive(true);
-					}
+				}					
 			}
 		}
 
@@ -191,8 +190,8 @@ int main() {
 			//	//	}
 			//	//}
 			//}
-			Snakes[0].Update(dt);
-			Snakes[1].setGhostPosition(Snakes[1].RunPrediction(netSimulator.Time()));
+			Snakes[PlayerNumber].Update(dt);
+			Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
 		//declare message type
 		SnakeMessage msg;
 
@@ -201,11 +200,12 @@ int main() {
 		//sent this players data
 		
 		//|| OR
-
+		float TimeLastSent = Timingclock.getElapsedTime().asSeconds();
+		//send any extra updated data
 		if (playerMoved)
 		{
 			sf::Packet SentData;
-			SentData << 1 << Snakes[0].getPosition().x << Snakes[0].getPosition().y << Snakes[0].GetRotation() << Snakes[0].GetScore() << netSimulator.Time();
+			SentData << 1 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << netSimulator.Time();
 			netSimulator.SendData(SentData);
 
 
@@ -213,21 +213,24 @@ int main() {
 			sf::Packet ReceivedEnemyData = netSimulator.ReceiveData();
 			ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.time;
 
-			Snakes[1].AddMessage(msg);
-			Snakes[1].Update(dt);
-			//Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
+			Snakes[EnemyNumber].AddMessage(msg);
+			Snakes[EnemyNumber].Update(dt);
+			//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
 
 			//printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score, msg.time);
-
 			playerMoved = false;
+			if (player2Score != msg.score)
+			{
+				player2Score = msg.score;
+				Snakes[EnemyNumber].setScore(msg.score);
+			}
 		}
-
-		float TimeLastSent = Timingclock.getElapsedTime().asSeconds();
+		//send and recive data every second to stay up to date
 		if (Timingclock.getElapsedTime().asSeconds() > TimeLastSent)
 		{
 			TimeLastSent = clock.getElapsedTime().asSeconds();
 			sf::Packet SentData;
-			SentData << 2 << Snakes[0].getPosition().x << Snakes[0].getPosition().y << Snakes[0].GetRotation() << Snakes[0].GetScore() << netSimulator.Time();
+			SentData << 2 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << netSimulator.Time();
 			netSimulator.SendData(SentData);
 
 
@@ -235,20 +238,26 @@ int main() {
 			sf::Packet ReceivedEnemyData = netSimulator.ReceiveData();
 			ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.time;
 
-			Snakes[1].AddMessage(msg);
-			Snakes[1].Update(dt);
-			//Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
+			Snakes[EnemyNumber].AddMessage(msg);
+			Snakes[EnemyNumber].Update(dt);
+			//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
 
 			printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score, msg.time);
+			if (player2Score != msg.score)
+			{
+				player2Score = msg.score;
+				Snakes[EnemyNumber].setScore(msg.score);
+			}
+
 		}
 
 		//Update the network simulation
 		netSimulator.Update(dt);
 
-		//Snakes[1].setPosition(Snakes[1].RunPrediction(netSimulator.Time()).x, Snakes[1].RunPrediction(netSimulator.Time()).y);
+		//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
 		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
 		
-		ScoreP1Text.setString("Player 1 score: " + Stringify(player1Score));
+		ScoreP1Text.setString("Player 1 score: " + Stringify(Snakes[PlayerNumber].GetScore()));
 
 		ScoreP2Text.setString("Player 2 score: " + Stringify(player2Score));
 

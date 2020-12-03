@@ -135,6 +135,15 @@ sf::Packet Networking::ReceiveData()
 	return     ReceivedData;
 }
 
+unsigned short Networking::GetPlayerPort()
+{
+	return PlayerSocket.getLocalPort();
+}
+
+unsigned short Networking::GetEnemyPort()
+{
+	return PortTarget;
+}
 
 void Networking::Reset() {
 	m_Time = 0.0f;

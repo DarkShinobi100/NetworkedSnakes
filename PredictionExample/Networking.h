@@ -30,6 +30,9 @@ public:
 	void SetSendRate(float);
 	void SendData(sf::Packet SentData);
 
+	unsigned short GetPlayerPort();
+	unsigned short GetEnemyPort();
+
 	sf::Packet ReceiveData();
 
 	void Reset();

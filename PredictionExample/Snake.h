@@ -18,6 +18,8 @@ public:
 	void Update(float dt);
 	const void Render(sf::RenderWindow* window);
 
+	void setColour(std::string color);
+
 	void AddMessage(const SnakeMessage& msg);
 	sf::Vector2f RunPrediction(float gameTime);
 
