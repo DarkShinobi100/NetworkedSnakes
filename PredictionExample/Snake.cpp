@@ -27,15 +27,7 @@ void Snake::Update(float dt)
 	latestMessage = m_Messages.back();
 	setPosition(latestMessage.x, latestMessage.y);
 	setRotation(latestMessage.Rotataion);
-	//setScore(latestMessage.score);
 }
-
-void Snake::setColour(std::string color)
-{//reset colour for snake
-	m_BodyTexture.loadFromFile("Assets/" + color + "Snake.png");
-	setTexture(m_BodyTexture);
-}
-
 
 void Snake::setPosition(float x, float y) {
 	sf::Sprite::setPosition(x, y);
@@ -185,4 +177,5 @@ sf::Vector2f Snake::RunPrediction(float gameTime) {
 
 void Snake::Reset() {
 	m_Messages.clear();
+	setScore(0);
 }

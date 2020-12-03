@@ -22,18 +22,13 @@
     <ClCompile Include="Apple.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Networking.cpp" />
-    <ClCompile Include="NetworkSimulator.cpp" />
     <ClCompile Include="Snake.cpp" />
-    <ClCompile Include="Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Apple.h" />
     <ClInclude Include="Networking.h" />
-    <ClInclude Include="NetworkSimulator.h" />
     <ClInclude Include="Snake.h" />
     <ClInclude Include="SnakeMessage.h" />
-    <ClInclude Include="Tank.h" />
-    <ClInclude Include="TankMessage.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

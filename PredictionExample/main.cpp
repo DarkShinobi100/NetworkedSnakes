@@ -39,7 +39,6 @@ int main() {
 		apple[i].SetRenderMode(Apple::RenderMode::REAL_ONLY);
 	}
 
-	int player1Score = 0;
 	int player2Score = 0;
 
 	int RNG = 1;
@@ -48,16 +47,18 @@ int main() {
 	bool playerMoved = true;
 	int PlayerNumber = 0;
 	int EnemyNumber = 0;
+	bool GameOver = false;
 	//Create two Snakes (Can also accept "black" and "red")
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
 	Snakes[0].setPosition(64, 256);
-	Snakes[0].SetRenderMode(Snake::RenderMode::REAL_ONLY);
+	Snakes[0].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
 	Snakes[0].setScore(0);
 
 	Snakes[1].setPosition(416, 128);
 	Snakes[1].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
 	Snakes[1].setScore(0);
+
 	//Initialise the background texture and sprite
 	sf::Texture floorTexture;
 	sf::Sprite floor;
@@ -73,6 +74,7 @@ int main() {
 	debugText.setFont(montserrat);
 	debugText.setOutlineColor(sf::Color::Black);
 	debugText.setOutlineThickness(1.f);
+	debugText.setPosition(250, 250);
 
 	sf::Text ScoreP1Text;
 	montserrat.loadFromFile("Assets/Montserrat-Regular.ttf");
@@ -94,10 +96,6 @@ int main() {
 	float sendRate	= 0.5f;
 	float latency	= 0.3f;
 	float gameSpeed = 1.0f;
-	float startTime = sendRate * 3.0f;
-
-	//When are we next printing the predicted position (so we don't spam the console)
-	float nextPrint = startTime;
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
@@ -105,19 +103,19 @@ int main() {
 	netSimulator.StartConnection();
 	if (netSimulator.GetPlayerPort()>netSimulator.GetEnemyPort())
 	{
-		printf("Bigger,, we are the Red snake \n");
+		printf("Bigger,, we are the Grey snake \n");
 		PlayerNumber = 0;
 		EnemyNumber = 1;
 	}
 	else
 	{
-		printf("smaller, we are the Grey snake \n");
+		printf("smaller, we are the Red snake \n");
 		EnemyNumber = 0;
 		PlayerNumber = 1;
 	}
 	netSimulator.m_MyID = PlayerNumber;	//On the network, we are Snake 0
 	
-	while (window.isOpen()) {
+	while (window.isOpen() && !GameOver) {
 		//Get the time since the last frame in milliseconds
 		float dt = clock.restart().asSeconds() * gameSpeed;
 
@@ -131,7 +129,6 @@ int main() {
 				if( event.key.code == sf::Keyboard::Key::R ) {
 					Snakes[PlayerNumber].Reset(); Snakes[EnemyNumber].Reset();
 					netSimulator.Reset();
-					nextPrint = startTime;
 					printf( "\n\n--------RESET--------\n\n" );
 				}
 
@@ -147,9 +144,6 @@ int main() {
 				}
 			}			
 		}
-
-		//Move player 1 forward at all times
-		Snakes[PlayerNumber].Move();
 
 		for (int i = 0; i < 30; i++)
 		{
@@ -171,12 +165,23 @@ int main() {
 					apple[i].SetActive(false);
 					RNG = rand() % 30;
 					apple[RNG].SetActive(true);
+
+					if (Snakes[PlayerNumber].GetScore() >= 5)
+					{
+						//game Over
+						GameOver = true;
+					}
 				}					
 			}
 		}
 
+		//Move player 1 forward at all times
+		Snakes[PlayerNumber].Move();
+
 		//Update the Snakes			
 		Snakes[PlayerNumber].Update(dt);
+		Snakes[EnemyNumber].Update(dt);
+
 		Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
 
 		//declare message type
@@ -184,9 +189,7 @@ int main() {
 
 		//update time
 		netSimulator.Update(dt);
-		//sent this players data
-		
-		//|| OR
+
 		float TimeLastSent = Timingclock.getElapsedTime().asSeconds();
 		//send any extra updated data
 		if (playerMoved)
@@ -212,8 +215,12 @@ int main() {
 			{
 				player2Score = msg.score;
 				Snakes[EnemyNumber].setScore(msg.score);
+
 				//if the active apple is different change to match
-				apple[RNG].SetActive(false);
+				for (int i = 0; i < 30; i++)
+				{
+					apple[i].SetActive(false);
+				}
 				apple[msg.activeApple].SetActive(true);
 			}
 		}
@@ -239,8 +246,12 @@ int main() {
 			{
 				player2Score = msg.score;
 				Snakes[EnemyNumber].setScore(msg.score);
+				
 				//if the active apple is different change to match
-				apple[RNG].SetActive(false);
+				for (int i = 0; i < 30; i++)
+				{
+					apple[i].SetActive(false);
+				}
 				apple[msg.activeApple].SetActive(true);
 			}
 
@@ -250,12 +261,15 @@ int main() {
 		netSimulator.Update(dt);
 
 		//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
-		debugText.setString( "Game Time: " + Stringify( netSimulator.Time() ));
 		
 		ScoreP1Text.setString("Player 1 score: " + Stringify(Snakes[PlayerNumber].GetScore()));
-
 		ScoreP2Text.setString("Player 2 score: " + Stringify(player2Score));
 
+		if (Snakes[EnemyNumber].GetScore() >= 5 ||  Snakes[PlayerNumber].GetScore() >= 5)
+		{
+			//game Over
+			GameOver = true;
+		}
 
 		//Render the scene
 		window.clear();
@@ -277,6 +291,21 @@ int main() {
 		window.draw(ScoreP1Text);
 		window.draw(ScoreP2Text);
 		window.display();		
+	}
+	while(window.isOpen() && GameOver)
+	{
+		//game over celebrate
+		debugText.setString("Game Over ");
+		window.clear();
+		window.draw(floor);
+		for (auto& Snake : Snakes) {
+			Snake.Render(&window);
+		}
+
+		window.draw(debugText);
+		window.draw(ScoreP1Text);
+		window.draw(ScoreP2Text);
+		window.display();
 	}
 
 	return 0;
