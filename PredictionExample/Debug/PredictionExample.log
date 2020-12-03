@@ -1,12 +1,9 @@
-﻿  Networking.cpp
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\Networking.cpp(128,15): warning C4101: 'msg': unreferenced local variable
-  main.cpp
+﻿  main.cpp
 C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(28,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(32,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(36,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(126,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(130,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(216,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(218,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(128,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(133,52): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(251,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\User\Documents\C++\Networking\NetworkedSnakes\PredictionExample\main.cpp(253,56): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   PredictionExample.vcxproj -> C:\Users\User\Documents\C++\Networking\NetworkedSnakes\Debug\PredictionExample.exe

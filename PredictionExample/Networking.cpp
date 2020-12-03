@@ -111,7 +111,7 @@ void Networking::SetSendRate(float sendRate)
 
 void Networking::SendData(sf::Packet SentData)
 {   //Make unblocking
-	//PlayerSocket.setBlocking(false);
+	PlayerSocket.setBlocking(false);
 	
 	//package data to send
 //	SentData << ID<< player.getPosition().x << player.getPosition().y << player.GetRotation()<<player.GetScore()<< m_Time;
