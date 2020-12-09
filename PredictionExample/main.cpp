@@ -99,6 +99,8 @@ int main() {
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
+	float TimeLastSent = netSimulator.Time();
+
 	//Ask user for inputs
 	netSimulator.StartConnection();
 	if (netSimulator.GetPlayerPort()>netSimulator.GetEnemyPort())
@@ -175,9 +177,6 @@ int main() {
 			}
 		}
 
-		//Move player 1 forward at all times
-		Snakes[PlayerNumber].Move();
-
 		//Update the Snakes			
 	//	Snakes[PlayerNumber].Update(dt);
 		//Snakes[EnemyNumber].Update(dt);
@@ -190,9 +189,8 @@ int main() {
 		//update time
 		netSimulator.Update(dt);
 
-		float TimeLastSent = Timingclock.getElapsedTime().asSeconds();
 		//send any updated data
-		if (playerMoved || Timingclock.getElapsedTime().asSeconds() > TimeLastSent)
+		if (playerMoved || netSimulator.Time() > TimeLastSent + 1.0)
 		{
 			sf::Packet SentData;
 			if (Timingclock.getElapsedTime().asSeconds() > TimeLastSent)
@@ -203,17 +201,17 @@ int main() {
 			{
 				SentData << 1 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG << netSimulator.Time();
 			}
-
 			netSimulator.SendData(SentData);
-			TimeLastSent = clock.getElapsedTime().asSeconds();
+
+			TimeLastSent = netSimulator.Time();
 
 			//receive enemy players data
 			sf::Packet ReceivedEnemyData;
 			if (netSimulator.ReceiveData(ReceivedEnemyData))
 			{
 				ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple >> msg.time;
-
 				Snakes[EnemyNumber].AddMessage(msg);
+			
 				Snakes[EnemyNumber].Update(dt);
 				//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
 
@@ -233,15 +231,14 @@ int main() {
 					apple[msg.activeApple].SetActive(true);
 				}
 			}
-
 			playerMoved = false;			
 		}
+		//Move player 1 forward at all times
+		Snakes[PlayerNumber].Move();
 
-		//Update the network simulation
-		netSimulator.Update(dt);
-
+		//move player 2
 		Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
-		Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
+		//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
 		
 		ScoreP1Text.setString("Player 1 score: " + Stringify(Snakes[PlayerNumber].GetScore()));
 		ScoreP2Text.setString("Player 2 score: " + Stringify(player2Score));

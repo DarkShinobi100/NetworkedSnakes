@@ -1,5 +1,7 @@
 #include "Snake.h"
 
+#include <iostream>
+
 Snake::Snake(std::string color) : sf::Sprite()
 {
 	//Snake image from: https://commons.wikimedia.org/wiki/File:Snake_-_Top_-_Animated_Green_and_Blue_-_friendly_cartoon.png
@@ -27,6 +29,7 @@ void Snake::Update(float dt)
 	latestMessage = m_Messages.back();
 	setPosition(latestMessage.x, latestMessage.y);
 	setRotation(latestMessage.Rotataion);
+	setGhostRotation(latestMessage.Rotataion);
 }
 
 void Snake::setPosition(float x, float y) {
@@ -92,7 +95,13 @@ const void Snake::Render(sf::RenderWindow* window) {
 
 //Add a message to the Snake's network message queue
 void Snake::AddMessage(const SnakeMessage& msg) {
-	m_Messages.push_back(msg);
+	//if we have NOT received this already
+	if (msg.time != latestMessage.time || (msg.x != latestMessage.x && msg.y != latestMessage.y))
+	{//save to vector for prediction
+		m_Messages.push_back(msg);
+		std::cout << "\n update vector\n";
+	}
+	//else ignore it
 }
 
 //This method calculates and stores the position, but also returns it immediately for use in the main loop
