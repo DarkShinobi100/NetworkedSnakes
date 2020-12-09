@@ -38,7 +38,6 @@ public:
 
 private:
 	sf::Sprite	m_GhostSprite;
-
 	sf::Texture m_BodyTexture;
 	float		m_BodyRotation;
 	int		m_Score = 0;

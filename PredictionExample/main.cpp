@@ -103,7 +103,8 @@ int main() {
 
 	//Ask user for inputs
 	netSimulator.StartConnection();
-	if (netSimulator.GetPlayerPort()>netSimulator.GetEnemyPort())
+
+	if (netSimulator.GetPlayerPort() > netSimulator.GetEnemyPort())
 	{
 		printf("Bigger,, we are the Grey snake \n");
 		PlayerNumber = 0;
@@ -116,6 +117,7 @@ int main() {
 		PlayerNumber = 1;
 	}
 	netSimulator.m_MyID = PlayerNumber;	//On the network, we are Snake 0
+
 	
 	while (window.isOpen() && !GameOver) {
 		//Get the time since the last frame in milliseconds
@@ -193,7 +195,7 @@ int main() {
 		if (playerMoved || netSimulator.Time() > TimeLastSent + 1.0)
 		{
 			sf::Packet SentData;
-			if (Timingclock.getElapsedTime().asSeconds() > TimeLastSent)
+			if (netSimulator.Time() > TimeLastSent + 1.0)
 			{
 				SentData << 2 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG << netSimulator.Time();
 			}

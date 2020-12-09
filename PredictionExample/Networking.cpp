@@ -31,11 +31,10 @@ void Networking::StartConnection()
 	std::cout << "\n Local host is: 127.0.0.1";
 	std::cout << "\nEnter your Enemies IP:";
 	std::cin >> IpTarget;
-	
-	
+		
 	std::cout << "\nEnter your Enemies Port number:";
 	std::cin >> PortTarget;
-	
+
 }
 
 void Networking::Update(float dt)
