@@ -25,7 +25,7 @@ void Snake::Update(float dt)
 	if (m_Messages.size() < 1)
 		return;
 	latestMessage = m_Messages.back();
-	//setPosition(latestMessage.x, latestMessage.y);
+	setPosition(latestMessage.x, latestMessage.y);
 	setRotation(latestMessage.Rotataion);
 }
 
