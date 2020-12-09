@@ -18,12 +18,12 @@ public:
 	float Time() { return m_Time; }
 	void Update(float dt);
 
-	void SendData(sf::Packet SentData);
+	bool SendData(sf::Packet& SentData);
 
 	unsigned short GetPlayerPort();
 	unsigned short GetEnemyPort();
 
-	sf::Packet ReceiveData();
+	bool ReceiveData(sf::Packet& ReceivedData);
 
 	void Reset();
 

@@ -179,10 +179,10 @@ int main() {
 		Snakes[PlayerNumber].Move();
 
 		//Update the Snakes			
-		Snakes[PlayerNumber].Update(dt);
-		Snakes[EnemyNumber].Update(dt);
+	//	Snakes[PlayerNumber].Update(dt);
+		//Snakes[EnemyNumber].Update(dt);
 
-		Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
+		//Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
 
 		//declare message type
 		SnakeMessage msg;
@@ -198,31 +198,36 @@ int main() {
 			SentData << 1 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore()<< RNG << netSimulator.Time();
 			netSimulator.SendData(SentData);
 
-
 			//receive enemy players data
-			sf::Packet ReceivedEnemyData = netSimulator.ReceiveData();
-			ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score>>msg.activeApple >> msg.time;
+			sf::Packet ReceivedEnemyData;
+			if (netSimulator.ReceiveData(ReceivedEnemyData))
+			{
+				ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple >> msg.time;
 
-			Snakes[EnemyNumber].AddMessage(msg);
-			Snakes[EnemyNumber].Update(dt);
-			//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
+				Snakes[EnemyNumber].AddMessage(msg);
+				Snakes[EnemyNumber].Update(dt);
+				//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
 
-			//printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score, msg.time);
+				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score, msg.time);
+
+				//if player score has updated
+				if (player2Score < msg.score)
+				{
+					player2Score = msg.score;
+					Snakes[EnemyNumber].setScore(msg.score);
+
+					//if the active apple is different change to match
+					for (int i = 0; i < 30; i++)
+					{
+						apple[i].SetActive(false);
+					}
+					apple[msg.activeApple].SetActive(true);
+				}
+			}
+
 			playerMoved = false;
 
-			//if player score has updated
-			if (player2Score < msg.score)
-			{
-				player2Score = msg.score;
-				Snakes[EnemyNumber].setScore(msg.score);
-
-				//if the active apple is different change to match
-				for (int i = 0; i < 30; i++)
-				{
-					apple[i].SetActive(false);
-				}
-				apple[msg.activeApple].SetActive(true);
-			}
+			
 		}
 		//send and recive data every second to stay up to date
 		if (Timingclock.getElapsedTime().asSeconds() > TimeLastSent)
@@ -232,35 +237,41 @@ int main() {
 			SentData << 2 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore()<< RNG << netSimulator.Time();
 			netSimulator.SendData(SentData);
 
-
 			//receive enemy players data
-			sf::Packet ReceivedEnemyData = netSimulator.ReceiveData();
-			ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple >> msg.time;
-
-			Snakes[EnemyNumber].AddMessage(msg);
-			Snakes[EnemyNumber].Update(dt);
-			//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
-
-			printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score, msg.time);
-			if (player2Score < msg.score)
+			sf::Packet ReceivedEnemyData;
+			if (netSimulator.ReceiveData(ReceivedEnemyData))
 			{
-				player2Score = msg.score;
-				Snakes[EnemyNumber].setScore(msg.score);
-				
-				//if the active apple is different change to match
-				for (int i = 0; i < 30; i++)
+				ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple >> msg.time;
+
+				Snakes[EnemyNumber].AddMessage(msg);
+				Snakes[EnemyNumber].Update(dt);
+				//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
+
+				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i Time =%.2f\n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score, msg.time);
+
+				if (player2Score < msg.score)
 				{
-					apple[i].SetActive(false);
+					player2Score = msg.score;
+					Snakes[EnemyNumber].setScore(msg.score);
+
+					//if the active apple is different change to match
+					for (int i = 0; i < 30; i++)
+					{
+						apple[i].SetActive(false);
+					}
+					apple[msg.activeApple].SetActive(true);
 				}
-				apple[msg.activeApple].SetActive(true);
 			}
+			
+
 
 		}
 
 		//Update the network simulation
 		netSimulator.Update(dt);
 
-		//Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).x, Snakes[EnemyNumber].RunPrediction(netSimulator.Time()).y);
+		Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
+		Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
 		
 		ScoreP1Text.setString("Player 1 score: " + Stringify(Snakes[PlayerNumber].GetScore()));
 		ScoreP2Text.setString("Player 2 score: " + Stringify(player2Score));

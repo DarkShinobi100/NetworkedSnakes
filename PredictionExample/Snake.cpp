@@ -25,12 +25,16 @@ void Snake::Update(float dt)
 	if (m_Messages.size() < 1)
 		return;
 	latestMessage = m_Messages.back();
-	setPosition(latestMessage.x, latestMessage.y);
+	//setPosition(latestMessage.x, latestMessage.y);
 	setRotation(latestMessage.Rotataion);
 }
 
 void Snake::setPosition(float x, float y) {
 	sf::Sprite::setPosition(x, y);
+}
+
+void Snake::setPosition(sf::Vector2f pos) {
+	sf::Sprite::setPosition(pos);
 }
 
 void Snake::setRotation(float Rotation) {

@@ -43,7 +43,7 @@ void Networking::Update(float dt)
 	m_Time += dt;
 }
 
-void Networking::SendData(sf::Packet SentData)
+bool Networking::SendData(sf::Packet& SentData)
 {   //Make unblocking
 	PlayerSocket.setBlocking(false);
 
@@ -51,18 +51,31 @@ void Networking::SendData(sf::Packet SentData)
 	{
 		std::cout << "\nSend Failed:";
 		// error...
+		if (PlayerSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::NotReady)
+		{
+			std::cout << "\nSend Failed:";
+			// error...
+			return false;
+		}
 	}
+	return  true;
 }
 
-sf::Packet Networking::ReceiveData()
+bool Networking::ReceiveData(sf::Packet& ReceivedData)
 {
 	//receive our data
 	if (PlayerSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::Done)
 	{
 		std::cout << "\nReceive Failed:";
 		// error...
-	}
-	return     ReceivedData;
+		if (PlayerSocket.receive(ReceivedData, IpTarget, PortTarget) != sf::Socket::NotReady)
+		{
+			std::cout << "\nReceive not ready:";
+			// error...
+			return false;
+		}
+	}	
+	return  true;
 }
 
 unsigned short Networking::GetPlayerPort()

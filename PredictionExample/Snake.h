@@ -23,6 +23,7 @@ public:
 
 	void SetRenderMode(const RenderMode renderMode) { m_RenderMode = renderMode; }
 	void setPosition(float x, float y);
+	void setPosition(sf::Vector2f pos);
 	void setRotation(float Rotation);
 	void setScore(int value);
 	int GetScore();
