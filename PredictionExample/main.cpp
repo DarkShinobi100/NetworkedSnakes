@@ -52,11 +52,11 @@ int main() {
 	Snake Snakes[2]{ Snake("black"), Snake("red") };
 
 	Snakes[0].setPosition(64, 256);
-	Snakes[0].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
+	Snakes[0].SetRenderMode(Snake::RenderMode::REAL_ONLY);
 	Snakes[0].setScore(0);
 
 	Snakes[1].setPosition(416, 128);
-	Snakes[1].SetRenderMode(Snake::RenderMode::REAL_AND_PREDICTED);
+	Snakes[1].SetRenderMode(Snake::RenderMode::REAL_ONLY);
 	Snakes[1].setScore(0);
 
 	//Initialise the background texture and sprite
