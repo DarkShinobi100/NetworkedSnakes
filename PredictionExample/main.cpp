@@ -203,6 +203,7 @@ int main() {
 				SentData << 1 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG;
 			}
 			netSimulator.SendData(SentData);
+			SentData.clear();
 
 			TimeLastSent = netSimulator.Time();
 
@@ -233,6 +234,8 @@ int main() {
 					}
 					apple[msg.activeApple].SetActive(true);
 				}
+
+				ReceivedEnemyData.clear();
 			}
 			playerMoved = false;			
 		}
