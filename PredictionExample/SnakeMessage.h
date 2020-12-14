@@ -15,7 +15,4 @@ struct SnakeMessage {
 
 	//The currently active Apple
 	int activeApple;
-	/** The time at which this message was sent.
-	(Not the time at which it was received!) */
-	float time;
 };

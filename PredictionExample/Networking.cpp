@@ -27,7 +27,6 @@ void Networking::StartConnection()
 	}
 	std::cout << "\nYour IP:" << sf::IpAddress::getLocalAddress();
 	std::cout << "\nYour  open Port Number:" << PlayerSocket.getLocalPort();
-
 	std::cout << "\n Local host is: 127.0.0.1";
 	std::cout << "\nEnter your Enemies IP:";
 	std::cin >> IpTarget;

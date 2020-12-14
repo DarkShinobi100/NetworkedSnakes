@@ -14,6 +14,10 @@ Snake::Snake(std::string color) : sf::Sprite()
 	m_GhostSprite.setColor(sf::Color(255, 255, 255, 128));
 	m_GhostSprite.setOrigin(getTextureRect().width / 2, getTextureRect().height / 2);
 	setGhostPosition(getPosition());
+
+	times[0] = 0.0f;
+	times[1] = 0.0f;
+	times[2] = 0.0f;
 }
 
 
@@ -27,7 +31,8 @@ void Snake::Update(float dt)
 	if (m_Messages.size() < 1)
 		return;
 	latestMessage = m_Messages.back();
-	setPosition(latestMessage.x, latestMessage.y);
+//	setPosition(latestMessage.x, latestMessage.y);
+//	setPosition(RunPrediction(dt));
 	setRotation(latestMessage.Rotataion);
 	setGhostRotation(latestMessage.Rotataion);
 }
@@ -94,12 +99,17 @@ const void Snake::Render(sf::RenderWindow* window) {
 }
 
 //Add a message to the Snake's network message queue
-void Snake::AddMessage(const SnakeMessage& msg) {
+void Snake::AddMessage(const SnakeMessage& msg, float time) {
 	//if we have NOT received this already
-	if (msg.time != latestMessage.time || (msg.x != latestMessage.x && msg.y != latestMessage.y))
+	if (msg.x != latestMessage.x && msg.y != latestMessage.y)
 	{//save to vector for prediction
 		m_Messages.push_back(msg);
 		std::cout << "\n update vector\n";
+
+		//set time values
+		times[2] = times[1];
+		times[1] = times[0];
+		times[0] = time;
 	}
 	//else ignore it
 }
@@ -137,22 +147,35 @@ sf::Vector2f Snake::RunPrediction(float gameTime) {
 
 	sf::Vector2f velocity;
 	sf::Vector2f distanceBetweenLastMessages;
-	float timesinceLastMessages = gameTime - msg0.time;
+	//float timesinceLastMessages = gameTime - msg0.time;
+	float timesinceLastMessages = gameTime - times[0];
 	float timeBetweenLastMessages;
 
 
 	distanceBetweenLastMessages.x = msg0.x - msg1.x;
 	distanceBetweenLastMessages.y = msg0.y - msg1.y;
-	timeBetweenLastMessages = msg0.time - msg1.time;
+	//timeBetweenLastMessages = msg0.time - msg1.time;
+	timeBetweenLastMessages = times[0] - times[1];
 
-	velocity = distanceBetweenLastMessages / timeBetweenLastMessages;
+	if (timeBetweenLastMessages != 0.0f)
+	{
+		velocity = distanceBetweenLastMessages / timeBetweenLastMessages;
+	}
+	else
+	{
+		velocity = distanceBetweenLastMessages /(float) 1.0;
+	}
 
 	sf::Vector2f lastPosition = sf::Vector2f(msg0.x, msg0.y);
 
 	//Displacement = speed * time
 	sf::Vector2f Dispalcement;
-	Dispalcement.x = velocity.x * (gameTime - msg0.time);
-	Dispalcement.y = velocity.y * (gameTime - msg0.time);
+	//Dispalcement.x = velocity.x * (gameTime - msg0.time);
+	//Dispalcement.y = velocity.y * (gameTime - msg0.time);
+	
+	Dispalcement.x = velocity.x * (gameTime - times[0]);
+	Dispalcement.y = velocity.y * (gameTime - times[0]);
+
 
 	predictedX = lastPosition.x + Dispalcement.x;
 	predictedY = lastPosition.y + Dispalcement.y;

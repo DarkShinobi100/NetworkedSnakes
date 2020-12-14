@@ -18,7 +18,7 @@ public:
 	void Update(float dt);
 	const void Render(sf::RenderWindow* window);
 
-	void AddMessage(const SnakeMessage& msg);
+	void AddMessage(const SnakeMessage& msg, float time);
 	sf::Vector2f RunPrediction(float gameTime);
 
 	void SetRenderMode(const RenderMode renderMode) { m_RenderMode = renderMode; }
@@ -42,8 +42,9 @@ private:
 	float		m_BodyRotation;
 	int		m_Score = 0;
 	RenderMode	m_RenderMode = RenderMode::REAL_AND_PREDICTED;
-
 	std::vector<SnakeMessage> m_Messages;
 	SnakeMessage latestMessage;
+
+	float times[3];
 };
 
