@@ -1,8 +1,8 @@
 #pragma once
 /** A position update message. */
 struct SnakeMessage {
-	/** The object number of this snake within the game world. */
-	int id;
+	/** basic data check */
+	float TotalData;
 
 	/** The coordinates of this snake within the game world. */
 	float x, y;
@@ -15,4 +15,10 @@ struct SnakeMessage {
 
 	//The currently active Apple
 	int activeApple;
+
+	//the time the packet was created(opponents time)
+	float time;
+
+	//test which type of data this is
+	int ID;
 };

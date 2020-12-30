@@ -177,13 +177,6 @@ int main() {
 				}					
 			}
 		}
-
-		//Update the Snakes			
-	//	Snakes[PlayerNumber].Update(dt);
-		//Snakes[EnemyNumber].Update(dt);
-
-		//Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
-
 		//declare message type
 		SnakeMessage msg;
 
@@ -193,14 +186,17 @@ int main() {
 		//send any updated data
 		if (playerMoved || netSimulator.Time() > TimeLastSent + 1.0)
 		{
+			//basic way to test if data has been tampered with
+			float TotalData = 0.0f;
+			TotalData = (Snakes[PlayerNumber].getPosition().x + Snakes[PlayerNumber].getPosition().y + Snakes[PlayerNumber].GetRotation() + Snakes[PlayerNumber].GetScore() + RNG + netSimulator.Time());
 			sf::Packet SentData;
 			if (netSimulator.Time() > TimeLastSent + 1.0)
 			{
-				SentData << 2 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG;
+				SentData << TotalData << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG<< netSimulator.Time()<<1;
 			}
 			else 
 			{
-				SentData << 1 << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG;
+				SentData << TotalData << Snakes[PlayerNumber].getPosition().x << Snakes[PlayerNumber].getPosition().y << Snakes[PlayerNumber].GetRotation() << Snakes[PlayerNumber].GetScore() << RNG << netSimulator.Time() << 2;
 			}
 			netSimulator.SendData(SentData);
 			SentData.clear();
@@ -211,16 +207,23 @@ int main() {
 			sf::Packet ReceivedEnemyData;
 			if (netSimulator.ReceiveData(ReceivedEnemyData))
 			{
-				ReceivedEnemyData >> msg.id >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple;
-				Snakes[EnemyNumber].AddMessage(msg,netSimulator.Time());
-				Snakes[EnemyNumber].Update(dt);
-				//Snakes[EnemyNumber].setPosition(msg.x,msg.y);
-				//Snakes[EnemyNumber].setGhostPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
+				float receivedDataTotal = 0.0f;
+				ReceivedEnemyData >> msg.TotalData >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple>>msg.time >>msg.ID;
+				
+				//basic data receive check for corruption
+				receivedDataTotal = msg.x + msg.y + msg.Rotataion + msg.score + msg.activeApple + msg.time;
+				if (receivedDataTotal == msg.TotalData)
+				{
+					Snakes[EnemyNumber].AddMessage(msg, netSimulator.Time());
+					Snakes[EnemyNumber].Update(dt);
 
-				//Snakes[EnemyNumber].setPosition(msg.x, msg.y);
+					printf("Received safe message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i \n", msg.ID, msg.x, msg.y, msg.Rotataion, msg.score);
 
-				printf("Received message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i \n", msg.id, msg.x, msg.y, msg.Rotataion, msg.score);
-
+				}
+				else
+				{
+					printf("\n Corrupt data\n");
+				}
 				//if player score has updated
 				if (player2Score < msg.score)
 				{

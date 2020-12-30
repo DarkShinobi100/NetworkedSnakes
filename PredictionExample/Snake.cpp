@@ -101,7 +101,7 @@ const void Snake::Render(sf::RenderWindow* window) {
 //Add a message to the Snake's network message queue
 void Snake::AddMessage(const SnakeMessage& msg, float time) {
 	//if we have NOT received this already
-	if (msg.x != latestMessage.x && msg.y != latestMessage.y)
+	if ((msg.x != latestMessage.x && msg.y != latestMessage.y)&& (msg.time > latestMessage.time))
 	{//save to vector for prediction
 		m_Messages.push_back(msg);
 		std::cout << "\n update vector\n";
@@ -112,6 +112,7 @@ void Snake::AddMessage(const SnakeMessage& msg, float time) {
 		times[0] = time;
 	}
 	//else ignore it
+	std::cout << "\n repeat data\n";
 }
 
 //This method calculates and stores the position, but also returns it immediately for use in the main loop
