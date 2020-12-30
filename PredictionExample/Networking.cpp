@@ -51,7 +51,7 @@ bool Networking::SendData(sf::Packet& SentData)
 		// error...
 		if (PlayerSocket.send(SentData, IpTarget, PortTarget) != sf::Socket::NotReady)
 		{
-			std::cout << "\nSend Failed:";
+			std::cout << "\nSend not ready:";
 			// error...
 			return false;
 		}

@@ -97,6 +97,8 @@ int main() {
 	float latency	= 0.3f;
 	float gameSpeed = 1.0f;
 	bool togglePrediction = true;
+	float timeLastReceived = 10000000000.0f;
+	float MessageTime = 0.0f;
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
@@ -130,12 +132,6 @@ int main() {
 			if (event.type == sf::Event::KeyPressed) {
 				if (event.key.code == sf::Keyboard::Key::Escape)
 					window.close();
-				if( event.key.code == sf::Keyboard::Key::R ) {
-					Snakes[PlayerNumber].Reset(); Snakes[EnemyNumber].Reset();
-					netSimulator.Reset();
-					printf( "\n\n--------RESET--------\n\n" );
-				}
-
 				if (event.key.code == sf::Keyboard::Key::A) {
 
 					Snakes[PlayerNumber].setRotation(Snakes[PlayerNumber].GetRotation() - 1.0);
@@ -222,46 +218,58 @@ int main() {
 				float receivedDataTotal = 0.0f;
 				ReceivedEnemyData >> msg.TotalData >> msg.x >> msg.y >> msg.Rotataion >> msg.score >> msg.activeApple>>msg.time >>msg.ID;
 				
-				//basic data receive check for corruption
-				receivedDataTotal = msg.x + msg.y + msg.Rotataion + msg.score + msg.activeApple + msg.time;
-				if (receivedDataTotal == msg.TotalData)
+				//check not same data again
+				if (MessageTime != msg.time)
 				{
-					Snakes[EnemyNumber].AddMessage(msg, netSimulator.Time());
-					Snakes[EnemyNumber].Update(dt);
-
-					printf("Received safe message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i \n", msg.ID, msg.x, msg.y, msg.Rotataion, msg.score);
-
-				}
-				else
-				{
-					printf("\n Corrupt data\n");
-				}
-				//if player score has updated
-				if (player2Score < msg.score)
-				{
-					player2Score = msg.score;
-					Snakes[EnemyNumber].setScore(msg.score);
-
-					//if the active apple is different change to match
-					for (int i = 0; i < 30; i++)
+					//basic data receive check for corruption
+					receivedDataTotal = msg.x + msg.y + msg.Rotataion + msg.score + msg.activeApple + msg.time;
+					if (receivedDataTotal == msg.TotalData)
 					{
-						apple[i].SetActive(false);
+						Snakes[EnemyNumber].AddMessage(msg, netSimulator.Time());
+						Snakes[EnemyNumber].Update(dt);
+
+						printf("Received safe message: ID= %d, Pos = (%.2f, %.2f), rotation = %.2f,score = %i \n", msg.ID, msg.x, msg.y, msg.Rotataion, msg.score);
+						timeLastReceived = netSimulator.Time();
+						MessageTime = msg.time;
+						//if player score has updated
+						if (player2Score < msg.score)
+						{
+							player2Score = msg.score;
+							Snakes[EnemyNumber].setScore(msg.score);
+
+							//if the active apple is different change to match
+							for (int i = 0; i < 30; i++)
+							{
+								apple[i].SetActive(false);
+							}
+							apple[msg.activeApple].SetActive(true);
+						}
+
+						if (!togglePrediction)
+						{
+							Snakes[EnemyNumber].setPosition(msg.x, msg.y);
+						}
 					}
-					apple[msg.activeApple].SetActive(true);
+					else
+					{
+						printf("\n Corrupt data\n");
+					}
 				}
-
-				if (!togglePrediction)
-				{
-					Snakes[EnemyNumber].setPosition(msg.x, msg.y);
-				}
-
 				ReceivedEnemyData.clear();
 			}
+			
+			//it has been more than 10 seconds since last successful receive
+			if (netSimulator.Time() >= (timeLastReceived + 10.0f))
+			{
+				printf("\n\n--------Enemy Disconnect--------\n\n");
+				//you win
+				GameOver = true;
+			}
+			
 			playerMoved = false;			
 		}
 		//Move player 1 forward at all times
 		Snakes[PlayerNumber].Move();
-
 		if (togglePrediction)
 		{
 			//move player 2
