@@ -96,6 +96,7 @@ int main() {
 	float sendRate	= 0.5f;
 	float latency	= 0.3f;
 	float gameSpeed = 1.0f;
+	bool togglePrediction = true;
 
 	//Create a network simulator with that "sends" a message every 0.5 seconds and has a latency of 0.1 seconds
 	Networking netSimulator(sendRate, latency);
@@ -144,6 +145,17 @@ int main() {
 
 					Snakes[PlayerNumber].setRotation(Snakes[PlayerNumber].GetRotation() + 1.0);
 					playerMoved = true;
+				}
+				if (event.key.code == sf::Keyboard::Key::P) {
+					if(togglePrediction)
+					{
+						togglePrediction = false;
+					}
+					else
+					{
+						togglePrediction = true;
+					}
+					 
 				}
 			}			
 		}
@@ -238,6 +250,11 @@ int main() {
 					apple[msg.activeApple].SetActive(true);
 				}
 
+				if (!togglePrediction)
+				{
+					Snakes[EnemyNumber].setPosition(msg.x, msg.y);
+				}
+
 				ReceivedEnemyData.clear();
 			}
 			playerMoved = false;			
@@ -245,9 +262,11 @@ int main() {
 		//Move player 1 forward at all times
 		Snakes[PlayerNumber].Move();
 
-		//move player 2
-		Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
-
+		if (togglePrediction)
+		{
+			//move player 2
+			Snakes[EnemyNumber].setPosition(Snakes[EnemyNumber].RunPrediction(netSimulator.Time()));
+		}
 		
 		ScoreP1Text.setString("Player 1 score: " + Stringify(Snakes[PlayerNumber].GetScore()));
 		ScoreP2Text.setString("Player 2 score: " + Stringify(player2Score));
